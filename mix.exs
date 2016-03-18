@@ -7,6 +7,7 @@ defmodule NewRelixir.Mixfile do
      elixir: "~> 1.1",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     aliases: aliases,
      deps: deps]
   end
 
@@ -19,5 +20,9 @@ defmodule NewRelixir.Mixfile do
     [{:phoenix, "~> 1.1"},
      {:ecto, "~> 1.1"},
      {:newrelic, git: "https://github.com/wooga/newrelic-erlang.git"}]
+  end
+
+  defp aliases do
+    ["test": ["test --no-start"]]
   end
 end
