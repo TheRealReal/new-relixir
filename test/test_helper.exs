@@ -8,6 +8,10 @@ defmodule TestHelpers.Assertions do
   def assert_between(actual, lower_bound, upper_bound) do
     assert actual >= lower_bound && actual <= upper_bound, "expected #{inspect(actual)} to be between #{inspect(lower_bound)} and #{inspect(upper_bound)}"
   end
+
+  def assert_is_struct(value, module) do
+    assert is_map(value) && value.__struct__ == module, "expected #{module}, got #{inspect(value)}"
+  end
 end
 
 ExUnit.start()
