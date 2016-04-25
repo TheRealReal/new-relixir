@@ -125,3 +125,9 @@ end
 
 When using the wrapper module's `custom_method`, the time it takes to call
 `MyApp.Repo.custom_method/2` will be recorded to New Relic.
+
+## Copyright
+
+Copyright &copy; 2016 The RealReal, Inc.
+
+Distributed under the [MIT License](LICENSE).
