@@ -5,6 +5,8 @@ Instrument your Phoenix applications with New Relic.
 New Relixir currently supports instrumenting Phoenix controllers and Ecto repositories to record
 response times for web transactions and database queries.
 
+* [Documentation](https://hexdocs.pm/new_relixir/)
+
 ## Usage
 
 The following instructions show how to add instrumentation with New Relixir to a hypothetical
