@@ -28,7 +28,7 @@ Phoenix application named `MyApp`.
       end
 
       defp deps do
-        [{:new_relixir, git: "https://github.com/TheRealReal/new-relixir.git"}]
+        [{:new_relixir, "~> 0.1.0"}]
       end
     end
     ```
