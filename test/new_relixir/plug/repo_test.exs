@@ -121,12 +121,6 @@ defmodule NewRelixir.Plug.RepoTest do
     end
   end
 
-  defmodule FakeModel do
-    use Ecto.Schema
-    schema "fake_models" do
-    end
-  end
-
   import TestHelpers.Assertions
   import Plug.Conn
 

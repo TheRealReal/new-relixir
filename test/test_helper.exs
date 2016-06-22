@@ -14,4 +14,10 @@ defmodule TestHelpers.Assertions do
   end
 end
 
+defmodule FakeModel do
+  use Ecto.Schema
+  schema "fake_models" do
+  end
+end
+
 ExUnit.start()

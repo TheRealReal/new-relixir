@@ -2,6 +2,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   @moduledoc """
   Utility methods for instrumenting parts of an Elixir app.
   """
+  import NewRelixir.Utils
 
   @doc """
   Instruments a database call and records the elapsed time.
@@ -42,7 +43,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   end
 
   defp infer_model(%{__struct__: model_type, __meta__: %Ecto.Schema.Metadata{}}) do
-    model_name(model_type)
+    short_module_name(model_type)
   end
 
   defp infer_model(%Ecto.Changeset{model: model}) do
@@ -50,7 +51,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   end
 
   defp infer_model(%Ecto.Query{from: {_, model_type}}) do
-    model_name(model_type)
+    short_module_name(model_type)
   end
 
   defp infer_model(%Ecto.Query{}) do
@@ -59,10 +60,6 @@ defmodule NewRelixir.Plug.Instrumentation do
 
   defp infer_model(queryable) do
     infer_model(Ecto.Queryable.to_query(queryable))
-  end
-
-  defp model_name(model_type) do
-    model_type |> Module.split |> tl |> Enum.join(".")
   end
 
   defp record(opts, elapsed) do
