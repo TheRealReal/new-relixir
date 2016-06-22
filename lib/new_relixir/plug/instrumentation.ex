@@ -48,12 +48,8 @@ defmodule NewRelixir.Plug.Instrumentation do
   defp infer_model(%{model: model}), do: infer_model(model)
 
   defp infer_model(%Ecto.Changeset{data: schema}) do
-    schema 
-      |> inspect 
-      |> String.split("{")
-      |> List.first
+    schema.__struct__ 
       |> model_name
-      |> String.replace("\"", "")
   end
 
   defp infer_model(%Ecto.Query{from: {_, model_type}}) do
