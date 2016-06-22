@@ -62,10 +62,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   end
 
   defp model_name(model_type) do
-    model_type
-    |> inspect
-    |> String.split(".")
-    |> List.last
+    model_type |> Module.split |> List.last
   end
 
   defp record(opts, elapsed) do
