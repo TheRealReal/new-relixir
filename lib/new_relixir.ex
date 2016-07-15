@@ -13,7 +13,6 @@ defmodule NewRelixir do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(:statman_server, [1000]),
       worker(:statman_aggregator, []),
     ]
 
