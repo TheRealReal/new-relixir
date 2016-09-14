@@ -41,7 +41,7 @@ defmodule NewRelixir.Plug.InstrumentationTest do
   end
 
   test "instrument_db infers query name from Ecto changeset and action name", %{conn: conn} do
-    changeset = Ecto.Changeset.cast(%FakeModel{}, %{}, [], [])
+    changeset = Ecto.Changeset.change(%FakeModel{}, %{})
     Instrumentation.instrument_db(:foo, changeset, [conn: conn], fn -> nil end)
     assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "FakeModel.foo"}})
   end
