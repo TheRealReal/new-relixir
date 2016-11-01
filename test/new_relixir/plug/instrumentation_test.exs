@@ -6,12 +6,6 @@ defmodule NewRelixir.Plug.InstrumentationTest do
 
   alias NewRelixir.Plug.Instrumentation
 
-  defmodule FakeModel do
-    use Ecto.Schema
-    schema "fake_models" do
-    end
-  end
-
   @transaction_name "TestTransaction"
 
   setup do

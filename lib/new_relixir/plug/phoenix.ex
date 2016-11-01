@@ -20,6 +20,7 @@ defmodule NewRelixir.Plug.Phoenix do
   @behaviour Elixir.Plug
   import Elixir.Phoenix.Controller
   import Elixir.Plug.Conn
+  import NewRelixir.Utils
 
   def init(opts) do
     opts
@@ -27,7 +28,7 @@ defmodule NewRelixir.Plug.Phoenix do
 
   def call(conn, _config) do
     if NewRelixir.configured? do
-      module = conn |> controller_module |> Module.split |> List.last
+      module = conn |> controller_module |> short_module_name
       action = conn |> action_name |> Atom.to_string
       transaction_name = "/#{module}##{action}"
 
