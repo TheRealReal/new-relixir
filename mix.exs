@@ -4,8 +4,8 @@ defmodule NewRelixir.Mixfile do
   def project do
     [app: :new_relixir,
      name: "New Relixir",
-     version: "0.1.0",
-     elixir: "~> 1.1",
+     version: "0.2.0",
+     elixir: "~> 1.2",
      description: "New Relic tracking for Elixir applications.",
      package: package,
      source_url: "https://github.com/TheRealReal/new-relixir",
