@@ -4,8 +4,7 @@ defmodule NewRelixir.Plug.RepoTest do
   defmodule FakeRepo do
     @behaviour Ecto.Repo
 
-    :random.seed(:erlang.phash2([node()]), :erlang.monotonic_time(), :erlang.unique_integer())
-    @sleep_ms :random.uniform(20)
+    @sleep_ms :rand.uniform(20)
 
     def config do
     end
@@ -156,13 +155,13 @@ defmodule NewRelixir.Plug.RepoTest do
   # get
 
   test "get calls repo's get method", %{conn: conn} do
-    id = :random.uniform(1000)
+    id = :rand.uniform(1000)
     assert Repo.get(FakeModel, id, conn: conn) == FakeRepo.get(FakeModel, id)
   end
 
   test "records time to call repo's get method", %{conn: conn} do
     {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get(FakeModel, :random.uniform(1000), conn: conn)
+      {time, _, _} = Repo.get(FakeModel, :rand.uniform(1000), conn: conn)
       time
     end)
 
@@ -173,13 +172,13 @@ defmodule NewRelixir.Plug.RepoTest do
   # get!
 
   test "get! calls repo's get! method", %{conn: conn} do
-    id = :random.uniform(1000)
+    id = :rand.uniform(1000)
     assert Repo.get!(FakeModel, id, conn: conn) == FakeRepo.get!(FakeModel, id)
   end
 
   test "records time to call repo's get! method", %{conn: conn} do
     {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get!(FakeModel, :random.uniform(1000), conn: conn)
+      {time, _, _} = Repo.get!(FakeModel, :rand.uniform(1000), conn: conn)
       time
     end)
 
@@ -430,11 +429,11 @@ defmodule NewRelixir.Plug.RepoTest do
   # transaction
 
   test "transaction calls repo's transaction method", %{conn: _conn} do
-    assert Repo.transaction(&:random.uniform/0) == FakeRepo.transaction(&:random.uniform/0)
+    assert Repo.transaction(&:rand.uniform/0) == FakeRepo.transaction(&:rand.uniform/0)
   end
 
   test "does not record time to call repo's transaction method", %{conn: _conn} do
-    Repo.transaction(&:random.uniform/0)
+    Repo.transaction(&:rand.uniform/0)
 
     assert Enum.empty?(:statman_histogram.keys)
   end
