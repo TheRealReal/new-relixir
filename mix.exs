@@ -23,6 +23,7 @@ defmodule NewRelixir.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.1"},
      {:ecto, ">= 1.1.0 and < 3.0.0"},
+     {:jiffy, ">= 0.14.9", [hex: :jiffy, optional: false]},
      {:newrelic, "~> 0.1.0"},
      {:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.11", only: :dev}]
