@@ -7,12 +7,12 @@ defmodule NewRelixir.Mixfile do
      version: "0.2.1",
      elixir: "~> 1.2",
      description: "New Relic tracking for Elixir applications.",
-     package: package,
+     package: package(),
      source_url: "https://github.com/TheRealReal/new-relixir",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases,
-     deps: deps]
+     aliases: aliases(),
+     deps: deps()]
   end
 
   def application do
@@ -21,7 +21,7 @@ defmodule NewRelixir.Mixfile do
   end
 
   defp deps do
-    [{:phoenix, "~> 1.1"},
+    [{:phoenix, "~> 1.3-rc"},
      {:ecto, ">= 1.1.0 and < 3.0.0"},
      {:newrelic, "~> 0.1.0"},
      {:earmark, "~> 0.1", only: :dev},
@@ -29,7 +29,7 @@ defmodule NewRelixir.Mixfile do
   end
 
   defp package do
-    [maintainers: ["David Cuddeback", "Robert Zotter"],
+    [maintainers: ["Fredrik Björk", "Robert Zotter"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/TheRealReal/new-relixir"}]
   end
