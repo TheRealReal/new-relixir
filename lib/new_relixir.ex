@@ -22,8 +22,8 @@ defmodule NewRelixir do
 
     :ok = :statman_server.add_subscriber(:statman_aggregator)
 
-    with app_name    <- Application.get_env(:new_relixir, :application_name),
-         license_key <- Application.get_env(:new_relixir, :license_key),
+    with app_name    <- get_config(:application_name),
+         license_key <- get_config(:license_key),
          true        <- String.valid?(app_name),
          true        <- String.valid?(license_key) do
       Application.put_env(:newrelic, :application_name, to_char_list(app_name))
@@ -39,5 +39,12 @@ defmodule NewRelixir do
   @spec configured? :: boolean
   def configured? do
     Application.get_env(:new_relixir, :application_name) != nil && Application.get_env(:new_relixir, :license_key) != nil
+  end
+
+  defp get_config(key) do
+    case Application.get_env(:new_relixir, key) do
+      {:system, var} -> System.get_env(var)
+      v              -> v
+    end
   end
 end
