@@ -155,6 +155,13 @@ defmodule NewRelixir.Plug.Repo do
         end)
       end
 
+      @spec aggregate(Ecto.Queryable.t, :avg | :count | :max | :min | :sum, atom, Keyword.t) :: term | nil
+      def aggregate(queryable, aggregate, field, opts \\ []) do
+        instrument_db(:aggregate, queryable, opts, fn() ->
+          repo().aggregate(queryable, aggregate, field, opts)
+        end)
+      end
+
       @spec preload([Ecto.Schema.t] | Ecto.Schema.t, preloads :: term) :: [Ecto.Schema.t] | Ecto.Schema.t
       def preload(model_or_models, preloads, opts \\ []) do
         instrument_db(:preload, model_or_models, opts, fn() ->
