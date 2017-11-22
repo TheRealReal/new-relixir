@@ -60,6 +60,6 @@ defmodule NewRelixir.Transaction do
   end
 
   defp record_value!(%__MODULE__{name: name}, data, elapsed) do
-    :ok = :statman_histogram.record_value({name, data}, elapsed)
+    :ok = NewRelixir.Collector.record_value({name, data}, elapsed)
   end
 end
