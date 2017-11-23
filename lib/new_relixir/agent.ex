@@ -74,7 +74,7 @@ defmodule NewRelixir.Agent do
   def push_error_data(collector, run_id, error_data) do
     url = url(collector, [method: :error_data, run_id: run_id])
     data = [run_id, error_data]
-  	push_data(url, data)
+    push_data(url, data)
   end
 
   def push_data(url, data) do
