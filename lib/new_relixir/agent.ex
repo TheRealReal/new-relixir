@@ -106,11 +106,11 @@ defmodule NewRelixir.Agent do
   end
 
   defp app_name() do
-    Application.get_env(:new_relic, :application_name)
+    Application.get_env(:new_relixir, :application_name)
   end
 
   defp license_key() do
-    Application.get_env(:new_relic, :license_key)
+    Application.get_env(:new_relixir, :license_key)
   end
 
   def request(url, body \\ "[]") do
