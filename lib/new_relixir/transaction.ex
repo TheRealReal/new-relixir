@@ -59,6 +59,10 @@ defmodule NewRelixir.Transaction do
     record_value!(transaction, {:db, query}, elapsed)
   end
 
+  defp record_external(%__MODULE__{} = transaction, data, elapsed) do
+    record_value!(transaction, {:ext, data}, elapsed)
+  end
+
   defp record_value!(%__MODULE__{name: name}, data, elapsed) do
     :ok = NewRelixir.Collector.record_value({name, data}, elapsed)
   end
