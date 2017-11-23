@@ -1,6 +1,6 @@
-defmodule NewRelic.Statman do
+defmodule NewRelixir.Statman do
   def poll do
-    [metrics, errors] = NewRelic.Collector.poll
+    [metrics, errors] = NewRelixir.Collector.poll
     transform_aggregated_metrics([metrics, errors])
   end
 
