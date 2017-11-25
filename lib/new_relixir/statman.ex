@@ -136,7 +136,14 @@ defmodule NewRelixir.Statman do
 
   def pluck(_, _, []), do: [0]
   def pluck(name, n, list) do
-    Enum.map(list, fn(elem) -> get_nth(elem, name, n-1) end)
+    Enum.map(list, fn(elem) ->
+      if is_list(elem) && is_list(hd(elem)) do
+        pluck(name, n, elem)
+      else
+        get_nth(elem, name, n-1)
+      end
+    end)
+    |> List.flatten
   end
 
   defp get_nth([[_, []]], _, _), do: 0
@@ -153,8 +160,6 @@ defmodule NewRelixir.Statman do
       0
     end
   end
-
-
 
   defp class2bin(:db), do: "Database"
   defp class2bin(atom) when is_atom(atom) do
