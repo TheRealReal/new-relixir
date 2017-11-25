@@ -34,7 +34,6 @@ defmodule NewRelixir.Agent do
     end
   end
 
-
   def connect(collector, hostname, attempts_count \\ 1) do
     url = url(collector, [method: :connect])
 

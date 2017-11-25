@@ -4,7 +4,7 @@ defmodule NewRelixir.Collector do
   @default_state [%{}, %{}]
 
   def start_link(_opts \\ []) do
-    GenServer.start_link(@name, @default_state, name: @name)
+    GenServer.start_link(@name, [current_time() | @default_state], name: @name)
   end
 
   def record_value({name, data}, elapsed) do
@@ -19,17 +19,22 @@ defmodule NewRelixir.Collector do
     GenServer.call(@name, :poll)
   end
 
-  def handle_cast({:record_value, key, time}, [metrics, errors]) do
+  def handle_cast({:record_value, key, time}, [start_time, metrics, errors]) do
     metrics = Map.update(metrics, key, [time], &([time | &1]))
-    {:noreply, [metrics, errors]}
+    {:noreply, [start_time, metrics, errors]}
   end
 
-  def handle_cast({:record_error, key}, [metrics, errors]) do
+  def handle_cast({:record_error, key}, [start_time, metrics, errors]) do
     errors = Map.update(errors, key, 1, &(1 + &1))
-    {:noreply, [metrics, errors]}
+    {:noreply, [start_time, metrics, errors]}
   end
 
   def handle_call(:poll, _from, state) do
-    {:reply, state, @default_state}
+    current_time = current_time()
+    {:reply, [current_time | state], [current_time | @default_state]}
+  end
+
+  defp current_time do
+    :os.system_time(:milli_seconds)
   end
 end
