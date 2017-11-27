@@ -19,7 +19,6 @@ defmodule NewRelixir.Plug.PhoenixTest do
     |> put_private(:phoenix_controller, SomeApplication.FakeController)
     |> put_private(:phoenix_action, :test_action)
 
-    :ok = :statman_histogram.init
     {:ok, conn: conn}
   end
 
@@ -40,7 +39,7 @@ defmodule NewRelixir.Plug.PhoenixTest do
       Enum.each(conn.before_send, fn (f) -> f.(conn) end)
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({"/FakeController#test_action", :total})
+    [recorded_time] = get_metric_by_key({"/FakeController#test_action", :total})
 
     assert_between(recorded_time, 42000, elapsed_time)
   end

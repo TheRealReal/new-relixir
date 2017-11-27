@@ -4,10 +4,6 @@ defmodule NewRelixir.TransactionTest do
 
   alias NewRelixir.Transaction
 
-  setup do
-    :ok = :statman_histogram.init
-  end
-
   @name "Test Transaction"
 
   # finish
@@ -16,7 +12,7 @@ defmodule NewRelixir.TransactionTest do
     transaction = Transaction.start(@name)
     Transaction.finish(transaction)
 
-    assert_contains(:statman_histogram.keys, {@name, :total})
+    assert_contains(get_metric_keys(), {@name, :total})
   end
 
   test "finish records accurate elapsed time" do
@@ -26,7 +22,7 @@ defmodule NewRelixir.TransactionTest do
       Transaction.finish(transaction)
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@name, :total})
+    [recorded_time] = get_metric_by_key({@name, :total})
 
     assert_between(recorded_time, 42000, elapsed_time)
   end
@@ -41,14 +37,14 @@ defmodule NewRelixir.TransactionTest do
     transaction = Transaction.start(@name)
     Transaction.record_db(transaction, {@model, @action}, @elapsed)
 
-    assert_contains(:statman_histogram.keys, {@name, {:db, "#{@model}.#{@action}"}})
+    assert_contains(get_metric_keys(), {@name, {:db, "#{@model}.#{@action}"}})
   end
 
   test "record_db records accurate query time when given model and action tuple" do
     transaction = Transaction.start(@name)
     Transaction.record_db(transaction, {@model, @action}, @elapsed)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@name, {:db, "#{@model}.#{@action}"}})
+    [recorded_time] = get_metric_by_key({@name, {:db, "#{@model}.#{@action}"}})
 
     assert recorded_time == @elapsed
   end
@@ -59,14 +55,14 @@ defmodule NewRelixir.TransactionTest do
     transaction = Transaction.start(@name)
     Transaction.record_db(transaction, @query, @elapsed)
 
-    assert_contains(:statman_histogram.keys, {@name, {:db, @query}})
+    assert_contains(get_metric_keys(), {@name, {:db, @query}})
   end
 
   test "record_db records accurate query time when given a string" do
     transaction = Transaction.start(@name)
     Transaction.record_db(transaction, @query, @elapsed)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@name, {:db, @query}})
+    [recorded_time] = get_metric_by_key({@name, {:db, @query}})
 
     assert recorded_time == @elapsed
   end

@@ -12,8 +12,6 @@ defmodule NewRelixir.Plug.InstrumentationTest do
     conn = %Plug.Conn{}
     |> put_private(:new_relixir_transaction, NewRelixir.Transaction.start(@transaction_name))
 
-    :ok = :statman_histogram.init
-
     {:ok, conn: conn}
   end
 
@@ -21,34 +19,34 @@ defmodule NewRelixir.Plug.InstrumentationTest do
 
   test "instrument_db records elapsed time with correct key when given custom query string", %{conn: conn} do
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: conn, query: "TestQuery"], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "TestQuery"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "TestQuery"}})
   end
 
   test "instrument_db infers query name from instance of Ecto model and action name", %{conn: conn} do
     Instrumentation.instrument_db(:foo, %FakeModel{}, [conn: conn], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "FakeModel.foo"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
   end
 
   test "instrument_db infers query name from module for Ecto model and action name", %{conn: conn} do
     Instrumentation.instrument_db(:foo, FakeModel, [conn: conn], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "FakeModel.foo"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
   end
 
   test "instrument_db infers query name from Ecto changeset and action name", %{conn: conn} do
     changeset = Ecto.Changeset.cast(%FakeModel{}, %{}, [], [])
     Instrumentation.instrument_db(:foo, changeset, [conn: conn], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "FakeModel.foo"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
   end
 
   test "instrument_db infers query name from query on an Ecto model", %{conn: conn} do
     query = Ecto.Query.from(FakeModel)
     Instrumentation.instrument_db(:foo, query, [conn: conn], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "FakeModel.foo"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
   end
 
   test "instrument_db records query as SQL when query name can't be determined", %{conn: conn} do
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: conn], fn -> nil end)
-    assert_contains(:statman_histogram.keys, {@transaction_name, {:db, "SQL"}})
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "SQL"}})
   end
 
   # with transaction
@@ -60,7 +58,7 @@ defmodule NewRelixir.Plug.InstrumentationTest do
       end)
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "SQL"}})
+    [recorded_time] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, 42000, elapsed_time)
   end
 
@@ -74,8 +72,9 @@ defmodule NewRelixir.Plug.InstrumentationTest do
   # with no transaction
 
   test "instrument_db does not record elapsed time when transaction is not present" do
+    get_metric_keys()
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: %Plug.Conn{}], fn -> nil end)
-    assert Enum.empty?(:statman_histogram.keys)
+    assert Enum.empty?(get_metric_keys())
   end
 
   test "instrument_db returns value of instrumented function when transaction is not present" do

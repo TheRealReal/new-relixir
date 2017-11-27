@@ -30,7 +30,7 @@ defmodule NewRelixir.Plug.Phoenix do
     if NewRelixir.configured? do
       module = conn |> controller_module |> short_module_name
       action = conn |> action_name |> Atom.to_string
-      transaction_name = "/#{module}##{action}"
+      transaction_name = "#{module}##{action}"
 
       conn
       |> put_private(:new_relixir_transaction, NewRelixir.Transaction.start(transaction_name))

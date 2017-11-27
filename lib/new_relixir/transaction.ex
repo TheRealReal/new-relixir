@@ -59,7 +59,11 @@ defmodule NewRelixir.Transaction do
     record_value!(transaction, {:db, query}, elapsed)
   end
 
+  def record_external(%__MODULE__{} = transaction, host, elapsed) do
+    record_value!(transaction, {:ext, host}, elapsed)
+  end
+
   defp record_value!(%__MODULE__{name: name}, data, elapsed) do
-    :ok = :statman_histogram.record_value({name, data}, elapsed)
+    :ok = NewRelixir.Collector.record_value({name, data}, elapsed)
   end
 end

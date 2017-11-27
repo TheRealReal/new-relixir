@@ -12,6 +12,16 @@ defmodule TestHelpers.Assertions do
   def assert_is_struct(value, module) do
     assert is_map(value) && value.__struct__ == module, "expected #{module}, got #{inspect(value)}"
   end
+
+  def get_metric_keys() do
+    [metrics, _] = NewRelixir.Collector.poll
+    Map.keys(metrics)
+  end
+
+  def get_metric_by_key(key) do
+    [metrics, _] = NewRelixir.Collector.poll
+    metrics[key]
+  end
 end
 
 defmodule FakeModel do
