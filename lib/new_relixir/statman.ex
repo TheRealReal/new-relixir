@@ -7,7 +7,9 @@ defmodule NewRelixir.Statman do
   def transform_aggregated_metrics(metrics, errors, time) do
     ms = metrics
       |> Map.to_list
-      |> Enum.map(fn(m) -> transform_metric(m) end)
+      |> Enum.reduce([], fn(m, acc) ->
+        acc ++ transform_metric(m)
+      end)
       |> Enum.filter(&(&1 != []))
 
     errs = errors |> Map.to_list |> Enum.map(fn(metric) -> transform_error_counter(metric) end)
@@ -86,19 +88,19 @@ defmodule NewRelixir.Statman do
         ]
 
       {{:background, scope}, :total} when is_binary(scope) ->
-          [%{name: bgscope2bin(scope), scope: ""}, data]
+          [[%{name: bgscope2bin(scope), scope: ""}, data]]
 
       {{:background, scope}, {class, segment}} when is_binary(scope) ->
-          [%{name: class2bin(class) <> "/" <> to_bin(segment), scope: bgscope2bin(scope)}, data]
+          [[%{name: class2bin(class) <> "/" <> to_bin(segment), scope: bgscope2bin(scope)}, data]]
 
       {scope, {class, segment}} when is_binary(scope) ->
-          [%{name: class2bin(class) <> "/" <> to_bin(segment), scope: scope2bin(scope)}, data]
+          [[%{name: class2bin(class) <> "/" <> to_bin(segment), scope: scope2bin(scope)}, data]]
 
       {scope, :total} when is_binary(scope) ->
-          [%{name: "WebTransaction/Uri/#{scope}", scope: ""}, data]
+          [[%{name: "WebTransaction/Uri/#{scope}", scope: ""}, data]]
 
       {a, b} when is_atom(a) and is_atom(b) ->
-          [%{name: "OtherTransaction/#{a}/#{b}", scope: ""}, data]
+          [[%{name: "OtherTransaction/#{a}/#{b}", scope: ""}, data]]
       _ ->
           []
     end
