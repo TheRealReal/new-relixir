@@ -1,6 +1,6 @@
 defmodule NewRelixir.Stats do
-  def poll do
-    [end_time, start_time, metrics, errors] = NewRelixir.Collector.poll
+  def pull do
+    [end_time, start_time, metrics, errors] = NewRelixir.Collector.pull
     transform_aggregated_metrics(metrics, errors, {start_time, end_time})
   end
 

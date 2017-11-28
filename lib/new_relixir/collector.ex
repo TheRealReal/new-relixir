@@ -15,8 +15,8 @@ defmodule NewRelixir.Collector do
     GenServer.cast(@name, {:record_error, {transaction_name, type, message}})
   end
 
-  def poll do
-    GenServer.call(@name, :poll)
+  def pull do
+    GenServer.call(@name, :pull)
   end
 
   def handle_cast({:record_value, key, time}, [start_time, metrics, errors]) do
@@ -29,7 +29,7 @@ defmodule NewRelixir.Collector do
     {:noreply, [start_time, metrics, errors]}
   end
 
-  def handle_call(:poll, _from, state) do
+  def handle_call(:pull, _from, state) do
     current_time = current_time()
     {:reply, [current_time | state], [current_time | @default_state]}
   end
