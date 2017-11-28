@@ -14,7 +14,7 @@ defmodule TestHelpers.Assertions do
   end
 
   def get_metric_keys() do
-    [metrics, _] = NewRelixir.Collector.poll
+    [_, _, metrics, _] = NewRelixir.Collector.poll
     Map.keys(metrics)
   end
 
