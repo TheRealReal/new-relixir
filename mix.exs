@@ -21,7 +21,6 @@ defmodule NewRelixir.Mixfile do
 
   defp deps do
     [
-      {:earmark, "~> 0.1", only: :dev},
       {:ecto, ">= 1.1.0 and < 3.0.0"},
       {:ex_doc, "~> 0.11", only: :dev},
       {:lhttpc, "~> 1.4"},
