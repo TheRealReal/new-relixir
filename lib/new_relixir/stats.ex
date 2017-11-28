@@ -86,22 +86,22 @@ defmodule NewRelixir.Stats do
 
   def webtransaction_total(ms) do
     name = "WebTransaction"
-    n    = Enum.sum(pluck(name, 1, ms))
-    sum  = Enum.sum(pluck(name, 2, ms))
-    min  = Enum.min(pluck(name, 4, ms))
-    max  = Enum.max(pluck(name, 5, ms))
-    sum2 = Enum.sum(pluck(name, 6, ms))
+    n    = Enum.sum(pluck(name, 0, ms))
+    sum  = Enum.sum(pluck(name, 1, ms))
+    min  = Enum.min(pluck(name, 3, ms), &zero/0)
+    max  = Enum.max(pluck(name, 4, ms), &zero/0)
+    sum2 = Enum.sum(pluck(name, 5, ms))
 
     [%{name: "HttpDispatcher", scope: ""}, [n, sum, sum, min, max, sum2]]
   end
 
   def db_total(ms) do
     name = "Database"
-    n    = Enum.sum(pluck(name, 1, ms))
-    sum  = Enum.sum(pluck(name, 2, ms))
-    min  = Enum.min(pluck(name, 4, ms))
-    max  = Enum.max(pluck(name, 5, ms))
-    sum2 = Enum.sum(pluck(name, 6, ms))
+    n    = Enum.sum(pluck(name, 0, ms))
+    sum  = Enum.sum(pluck(name, 1, ms))
+    min  = Enum.min(pluck(name, 3, ms), &zero/0)
+    max  = Enum.max(pluck(name, 4, ms), &zero/0)
+    sum2 = Enum.sum(pluck(name, 5, ms))
 
     [%{name: "Database/all", scope: ""}, [n, sum, sum, min, max, sum2]]
   end
@@ -114,31 +114,10 @@ defmodule NewRelixir.Stats do
     ]
   end
 
-  def pluck(_, _, []), do: [0]
-  def pluck(name, n, list) do
-    Enum.map(list, fn(elem) ->
-      if is_list(elem) && is_list(hd(elem)) do
-        pluck(name, n, elem)
-      else
-        get_nth(elem, name, n-1)
-      end
-    end)
-    |> List.flatten
-  end
-
-  defp get_nth([[_, []]], _, _), do: 0
-  defp get_nth([_, []], _, _), do: 0
-  defp get_nth([[struct, data_list]], name, n), do: get_nth([struct, data_list], name, n)
-  defp get_nth([struct, data_list], name, n) do
-    if String.contains?(struct[:name], name) do
-      if struct[:scope] == "" do
-        Enum.at(data_list, n) || 0
-      else
-        0
-      end
-    else
-      0
-    end
+  def pluck(type, position, metrics) do
+    metrics
+     |> Enum.filter(fn [%{name: name}, _data] -> String.contains?(name, type) end)
+     |> Enum.map(fn [_metric, data] -> Enum.at(data, position) || 0 end)
   end
 
   defp class2bin(:db), do: "Database"
@@ -160,4 +139,6 @@ defmodule NewRelixir.Stats do
   defp scope2bin(url) when is_binary(url) do
     "WebTransaction/Uri/#{url}"
   end
+
+  defp zero, do: 0
 end
