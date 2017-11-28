@@ -29,20 +29,6 @@ defmodule NewRelixir.Stats do
     List.duplicate(error, count)
   end
 
-  def transform_counter(metric) do
-    case metric[:key] do
-      {scope, {:error, {_type, _message}}} when is_binary(scope) ->
-        errors_count = metric[:value]
-        if errors_count > 0 do
-          [[%{name: "Errors/WebTransaction/Uri/#{scope}", scope: ""}, [errors_count, 0.0, 0.0, 0.0, 0.0, 0.0]
-           ]]
-        else
-          []
-        end
-      _ -> []
-    end
-  end
-
   def summary(values) do
     summary(values, {0, 0, 0, 0, 0})
   end
