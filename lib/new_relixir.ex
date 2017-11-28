@@ -14,7 +14,7 @@ defmodule NewRelixir do
 
     children = [
       worker(NewRelixir.Collector, []),
-      worker(NewRelixir.Poller, [&NewRelixir.Statman.poll/0])
+      worker(NewRelixir.Poller, [&NewRelixir.Stats.poll/0])
     ]
 
     opts = [strategy: :one_for_one, name: NewRelixir.Supervisor]
