@@ -4,6 +4,7 @@ defmodule NewRelixir.Stats do
     transform_aggregated_metrics(metrics, errors, {start_time, end_time})
   end
 
+  def transform_aggregated_metrics([], [], time), do: {[], [], time}
   def transform_aggregated_metrics(metrics, errors, time) do
     ms = metrics
       |> Map.to_list
@@ -182,5 +183,4 @@ defmodule NewRelixir.Stats do
   defp scope2bin(url) when is_binary(url) do
     "WebTransaction/Uri/#{url}"
   end
-
 end

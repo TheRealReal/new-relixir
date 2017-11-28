@@ -31,7 +31,8 @@ defmodule NewRelixir.Polling do
     {:ok, hostname} = :inet.gethostname()
     try do
       case pull_fun.() do
-        {[], []} ->
+        {[], [], _internval} ->
+          Logger.debug "Nothing to send."
           :ok
         {metrics, errors, {start_time, end_time}} ->
           metrics = [
