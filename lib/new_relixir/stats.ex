@@ -4,16 +4,12 @@ defmodule NewRelixir.Stats do
     transform_aggregated_metrics(metrics, errors, {start_time, end_time})
   end
 
-  def transform_aggregated_metrics([], [], time), do: {[], [], time}
+  def transform_aggregated_metrics(metrics, errors, time) when metrics == %{} and errors == %{} do
+    {[], [], time}
+  end
   def transform_aggregated_metrics(metrics, errors, time) do
-    ms = metrics
-      |> Map.to_list
-      |> Enum.reduce([], fn(m, acc) ->
-        acc ++ transform_metric(m)
-      end)
-      |> Enum.filter(&(&1 != []))
-
-    errs = errors |> Map.to_list |> Enum.map(fn(metric) -> transform_error_counter(metric) end)
+    ms = Enum.flat_map(metrics, &transform_histogram/1)
+    errs = Enum.flat_map(errors, &transform_error_counter/1)
 
     {[webtransaction_total(ms), db_total(ms) | errors_total(errs) ++ ms], errs, time}
   end
@@ -30,13 +26,8 @@ defmodule NewRelixir.Stats do
         request_params: %{},
         request_uri: scope}]
     ]
-    List.duplicate(error, count) |> List.flatten
+    List.duplicate(error, count)
   end
-
-  defp transform_metric(metric) do
-    transform_histogram(metric)
-  end
-
 
   def transform_counter(metric) do
     case metric[:key] do
