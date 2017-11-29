@@ -13,7 +13,7 @@ defmodule NewRelixir.Agent do
         :ok ->
           push_error_data(collector, run_id, errors)
         error ->
-          IO.inspect error
+          Logger.error(error)
       end
     end
   end
@@ -54,7 +54,7 @@ defmodule NewRelixir.Agent do
         return = struct["return_value"]
         return["agent_run_id"]
       {:ok, {{503, _}, _, body}} ->
-        raise RuntimeError.exception("newrelic - connect - #{inspect body}")
+        raise RuntimeError.exception("newrelic - connect - #{inspect(body)}")
       {:error, :timeout} ->
         if attempts_count > 0 do
           connect(collector, hostname, attempts_count-1)
@@ -87,9 +87,7 @@ defmodule NewRelixir.Agent do
             {:error, exception}
         end;
       {:ok, {{503, _}, _, body}} ->
-        raise RuntimeError.exception("newrelic - push_data - #{inspect body}")
-      {:ok, resp} ->
-        IO.inspect resp
+        raise RuntimeError.exception("newrelic - push_data - #{inspect(body)}")
       {:error, :timeout} ->
         raise RuntimeError.exception("newrelic - push_data - timeout")
     end
