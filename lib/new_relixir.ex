@@ -5,6 +5,8 @@ defmodule NewRelixir do
 
   use Application
 
+  require Logger
+
   @doc """
   Application callback to start New Relixir.
   """
@@ -16,6 +18,12 @@ defmodule NewRelixir do
       worker(NewRelixir.Collector, []),
       worker(NewRelixir.Polling, [&NewRelixir.Stats.pull/0])
     ]
+
+    unless configured?() do
+      Logger.warn(
+        "Missing configuration for NewRelixir. No data will be sent to New Relic."
+      )
+    end
 
     opts = [strategy: :one_for_one, name: NewRelixir.Supervisor]
     Supervisor.start_link(children, opts)
