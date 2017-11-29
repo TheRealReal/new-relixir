@@ -18,8 +18,8 @@ defmodule NewRelixir.Stats do
     error = [
       :os.system_time(:micro_seconds) / 1_000_000,
       scope2bin(scope),
-      to_bin(message),
-      to_bin(type),
+      to_string(message),
+      to_string(type),
       [%{
         parameter_groups: %{},
         stack_trace: [],
@@ -51,7 +51,7 @@ defmodule NewRelixir.Stats do
     case key do
       {scope, {:db, segment}} when is_binary(scope) ->
         [
-         [%{name: "Database/#{to_bin(segment)}", scope: scope2bin(scope)}, data],
+         [%{name: "Database/#{segment}", scope: scope2bin(scope)}, data],
          [%{name: "Database/allWeb", scope: ""}, data],
          [%{name: "Database/all", scope: ""}, data]
         ]
@@ -69,10 +69,10 @@ defmodule NewRelixir.Stats do
           [[%{name: bgscope2bin(scope), scope: ""}, data]]
 
       {{:background, scope}, {class, segment}} when is_binary(scope) ->
-          [[%{name: class2bin(class) <> "/" <> to_bin(segment), scope: bgscope2bin(scope)}, data]]
+          [[%{name: class2bin(class) <> "/" <> to_string(segment), scope: bgscope2bin(scope)}, data]]
 
       {scope, {class, segment}} when is_binary(scope) ->
-          [[%{name: class2bin(class) <> "/" <> to_bin(segment), scope: scope2bin(scope)}, data]]
+          [[%{name: class2bin(class) <> "/" <> to_string(segment), scope: scope2bin(scope)}, data]]
 
       {scope, :total} when is_binary(scope) ->
           [[%{name: "WebTransaction/Uri/#{scope}", scope: ""}, data]]
@@ -123,13 +123,6 @@ defmodule NewRelixir.Stats do
   defp class2bin(:db), do: "Database"
   defp class2bin(atom) when is_atom(atom) do
     String.capitalize to_string(atom)
-  end
-
-  defp to_bin(atom) when is_atom(atom) do
-    to_string(atom)
-  end
-  defp to_bin(binary) when is_binary(binary) do
-    binary
   end
 
   defp bgscope2bin(scope) do
