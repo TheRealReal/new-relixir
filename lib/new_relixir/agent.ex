@@ -1,4 +1,6 @@
 defmodule NewRelixir.Agent do
+  require Logger
+
   @base_url "http://~s/agent_listener/invoke_raw_method?"
 
   @doc """
@@ -13,7 +15,7 @@ defmodule NewRelixir.Agent do
         :ok ->
           push_error_data(collector, run_id, errors)
         error ->
-          Logger.error(error)
+          Logger.error(inspect(error))
       end
     end
   end
@@ -24,10 +26,11 @@ defmodule NewRelixir.Agent do
   def get_redirect_host() do
     url = url(method: :get_redirect_host)
     case request(url) do
-      {:ok, {{200, 'OK'}, _, body}} ->
+      {:ok, 200, body} ->
         struct = Poison.decode!(body)
+
         struct["return_value"]
-      {:ok, {{503, _}, _, _}} ->
+      {:ok, 503, _} ->
         raise RuntimeError.message("newrelic_down")
       {:error, :timeout} ->
         raise RuntimeError.message("newrelic_down")
@@ -49,11 +52,13 @@ defmodule NewRelixir.Agent do
     }]
 
     case request(url, Poison.encode!(data)) do
-      {:ok, {{200, 'OK'}, _, body}} ->
+      {:ok, 200, body} ->
         struct = Poison.decode!(body)
         return = struct["return_value"]
+
+
         return["agent_run_id"]
-      {:ok, {{503, _}, _, body}} ->
+      {:ok, 503, body} ->
         raise RuntimeError.exception("newrelic - connect - #{inspect(body)}")
       {:error, :timeout} ->
         if attempts_count > 0 do
@@ -77,16 +82,17 @@ defmodule NewRelixir.Agent do
   end
 
   def push_data(url, data) do
-    case request(url, Poison.encode!(data)) do
-      {:ok, {{200, 'OK'}, _, response}} ->
-        struct = Poison.decode!(response)
+    result = request(url, Poison.encode!(data))
+    case result do
+      {:ok, 200, body} ->
+        struct = Poison.decode!(body)
         case struct["exception"] do
           nil ->
             :ok
           exception ->
             {:error, exception}
         end;
-      {:ok, {{503, _}, _, body}} ->
+      {:ok, 503, body} ->
         raise RuntimeError.exception("newrelic - push_data - #{inspect(body)}")
       {:error, :timeout} ->
         raise RuntimeError.exception("newrelic - push_data - timeout")
@@ -111,7 +117,11 @@ defmodule NewRelixir.Agent do
   end
 
   def request(url, body \\ "[]") do
-    :lhttpc.request(url, :post, [{"Content-Encoding", "identity"}], body, 5000)
+    headers = [{'Content-Encoding', 'identity'}]
+    case :hackney.post(url, headers, body, [:with_body]) do
+      {:ok, status, _, body} -> {:ok, status, body}
+      error -> error
+    end
   end
 
   def url(args) do
@@ -125,7 +135,7 @@ defmodule NewRelixir.Agent do
     ]
     base_url = String.replace(@base_url, "~s", host)
     segments = List.flatten([base_url, urljoin(args ++ base_args)])
-    Enum.join(segments) |> String.to_char_list
+    Enum.join(segments)
   end
 
   defp urljoin([]), do: []

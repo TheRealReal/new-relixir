@@ -17,14 +17,14 @@ defmodule NewRelixir.Mixfile do
 
   def application do
     [mod: {NewRelixir, []},
-     applications: [:logger, :lhttpc]]
+     applications: [:logger, :hackney]]
   end
 
   defp deps do
     [
       {:ecto, ">= 1.1.0 and < 3.0.0"},
       {:ex_doc, "~> 0.11", only: :dev},
-      {:lhttpc, "~> 1.4"},
+      {:hackney, "~> 1.10"},
       {:phoenix, "~> 1.3"}
     ]
   end
