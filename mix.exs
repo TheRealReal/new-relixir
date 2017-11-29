@@ -11,6 +11,7 @@ defmodule NewRelixir.Mixfile do
      source_url: "https://github.com/TheRealReal/new-relixir",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     aliases: aliases(),
      deps: deps()]
   end
 
@@ -32,5 +33,9 @@ defmodule NewRelixir.Mixfile do
     [maintainers: ["Fredrik Björk", "Robert Zotter"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/TheRealReal/new-relixir"}]
+  end
+
+  defp aliases do
+    ["test": ["test --no-start"]]
   end
 end

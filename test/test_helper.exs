@@ -31,3 +31,4 @@ defmodule FakeModel do
 end
 
 ExUnit.start()
+NewRelixir.Collector.start_link()
