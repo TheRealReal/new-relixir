@@ -111,7 +111,7 @@ defmodule NewRelixir.Plug.RepoTest do
     def __pool__ do
     end
 
-    def log(_entry) do
+    def __log__(_entry) do
     end
 
     defp record_call(method_name, args) do

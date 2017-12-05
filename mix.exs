@@ -4,8 +4,8 @@ defmodule NewRelixir.Mixfile do
   def project do
     [app: :new_relixir,
      name: "New Relixir",
-     version: "0.3.0-rc.0",
-     elixir: "~> 1.2",
+     version: "0.4.0-rc.0",
+     elixir: "~> 1.5",
      description: "New Relic tracking for Elixir applications.",
      package: package(),
      source_url: "https://github.com/TheRealReal/new-relixir",
@@ -22,7 +22,7 @@ defmodule NewRelixir.Mixfile do
 
   defp deps do
     [
-      {:ecto, ">= 1.1.0 and < 3.0.0"},
+      {:ecto, "~> 2.0"},
       {:ex_doc, "~> 0.11", only: :dev},
       {:hackney, "~> 1.10"},
       {:phoenix, "~> 1.3"}
