@@ -5,6 +5,8 @@ defmodule NewRelixir do
 
   use Application
 
+  require Logger
+
   @doc """
   Application callback to start New Relixir.
   """
@@ -13,26 +15,18 @@ defmodule NewRelixir do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(:statman_server, [1000]),
-      worker(:statman_aggregator, []),
+      worker(NewRelixir.Collector, []),
+      worker(NewRelixir.Polling, [&NewRelixir.Stats.pull/0])
     ]
 
-    opts = [strategy: :one_for_one, name: NewRelixir.Supervisor]
-    result = Supervisor.start_link(children, opts)
-
-    :ok = :statman_server.add_subscriber(:statman_aggregator)
-
-    with app_name    <- Application.get_env(:new_relixir, :application_name),
-         license_key <- Application.get_env(:new_relixir, :license_key),
-         true        <- String.valid?(app_name),
-         true        <- String.valid?(license_key) do
-      Application.put_env(:newrelic, :application_name, to_char_list(app_name))
-      Application.put_env(:newrelic, :license_key, to_char_list(license_key))
-
-      {:ok, _} = :newrelic_poller.start_link(&:newrelic_statman.poll/0)
+    unless configured?() do
+      Logger.warn(
+        "Missing configuration for NewRelixir. No data will be sent to New Relic."
+      )
     end
 
-    result
+    opts = [strategy: :one_for_one, name: NewRelixir.Supervisor]
+    Supervisor.start_link(children, opts)
   end
 
   @doc false

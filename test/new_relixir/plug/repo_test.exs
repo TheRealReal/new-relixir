@@ -135,8 +135,6 @@ defmodule NewRelixir.Plug.RepoTest do
     conn = %Plug.Conn{}
     |> put_private(:new_relixir_transaction, NewRelixir.Transaction.start(@transaction_name))
 
-    :ok = :statman_histogram.init
-
     {:ok, conn: conn}
   end
 
@@ -152,7 +150,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.all"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -169,7 +167,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.get"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -186,7 +184,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.get!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -202,7 +200,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.get_by"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get_by"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -218,7 +216,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.get_by!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get_by!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -234,7 +232,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.one"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.one"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -250,7 +248,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.one!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.one!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -266,7 +264,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.update_all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update_all"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -282,7 +280,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.delete_all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete_all"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -298,7 +296,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.insert"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -314,7 +312,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.update"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -330,7 +328,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.insert_or_update"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -346,7 +344,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.delete"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -362,7 +360,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.insert!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -378,7 +376,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.update!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -394,7 +392,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.insert_or_update!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -410,7 +408,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.delete!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -442,7 +440,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.preload"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.preload"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -453,9 +451,10 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "does not record time to call repo's transaction method", %{conn: _conn} do
+    get_metric_keys()
     Repo.transaction(&:rand.uniform/0)
 
-    assert Enum.empty?(:statman_histogram.keys)
+    assert Enum.empty?(get_metric_keys())
   end
 
   # rollback
@@ -465,8 +464,9 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "does not record time to call repo's rollback method", %{conn: _conn} do
+    get_metric_keys()
     Repo.rollback(:foo)
 
-    assert Enum.empty?(:statman_histogram.keys)
+    assert Enum.empty?(get_metric_keys())
   end
 end
