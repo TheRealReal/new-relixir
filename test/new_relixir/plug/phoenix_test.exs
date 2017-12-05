@@ -8,8 +8,8 @@ defmodule NewRelixir.Plug.PhoenixTest do
 
   setup %{configured: configured} do
     if configured do
-      Application.put_env(:new_relixir, :application_name, to_char_list("App Name"))
-      Application.put_env(:new_relixir, :license_key, to_char_list("License Key"))
+      Application.put_env(:new_relixir, :application_name, to_charlist("App Name"))
+      Application.put_env(:new_relixir, :license_key, to_charlist("License Key"))
     else
       Application.delete_env(:new_relixir, :application_name)
       Application.delete_env(:new_relixir, :license_key)

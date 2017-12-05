@@ -45,10 +45,6 @@ defmodule NewRelixir.Plug.Instrumentation do
   defp infer_model(%{__struct__: model_type, __meta__: %Ecto.Schema.Metadata{}}) do
     short_module_name(model_type)
   end
-  # Ecto 1.1 clause
-  defp infer_model(%{model: model}) do
-    infer_model(model)
-  end
   # Ecto 2.0 clause
   defp infer_model(%{data: data}) do
     infer_model(data)
