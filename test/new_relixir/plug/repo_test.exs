@@ -91,6 +91,10 @@ defmodule NewRelixir.Plug.RepoTest do
       record_call(:delete!, [model, Keyword.delete(opts, :conn)])
     end
 
+    def aggregate(queryable, aggregate, field, opts \\ []) do
+      record_call(:aggregate, [queryable, aggregate, field, Keyword.delete(opts, :conn)])
+    end
+
     def preload(model_or_models, preloads) do
       record_call(:preload, [model_or_models, preloads])
     end
@@ -407,6 +411,22 @@ defmodule NewRelixir.Plug.RepoTest do
     end)
 
     [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.delete!"}})
+    assert_between(recorded_time, sleep_time, elapsed_time)
+  end
+
+  # aggregate
+
+  test "aggregate calls repo's aggregate method", %{conn: conn} do
+    assert Repo.aggregate(FakeModel, :count, :id, conn: conn) == FakeRepo.aggregate(FakeModel, :count, :id)
+  end
+
+  test "records time to call repo's aggregate method", %{conn: conn} do
+    {elapsed_time, sleep_time} = :timer.tc(fn ->
+      {time, _, _} = Repo.aggregate(FakeModel, :count, :id, conn: conn)
+      time
+    end)
+
+    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.aggregate"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
