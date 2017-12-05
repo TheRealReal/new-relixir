@@ -424,7 +424,7 @@ defmodule NewRelixir.Plug.RepoTest do
       time
     end)
 
-    [{recorded_time, _}] = :statman_histogram.get_data({@transaction_name, {:db, "FakeModel.aggregate"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.aggregate"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
