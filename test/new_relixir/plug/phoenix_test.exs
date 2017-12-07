@@ -7,13 +7,9 @@ defmodule NewRelixir.Plug.PhoenixTest do
   @moduletag configured: true
 
   setup %{configured: configured} do
-    if configured do
-      Application.put_env(:new_relixir, :application_name, to_charlist("App Name"))
-      Application.put_env(:new_relixir, :license_key, to_charlist("License Key"))
-    else
-      Application.delete_env(:new_relixir, :application_name)
-      Application.delete_env(:new_relixir, :license_key)
-    end
+    previous_setting = Application.get_env(:new_relixir, :active)
+    Application.put_env(:new_relixir, :active, configured)
+    on_exit fn -> Application.put_env(:new_relixir, :active, previous_setting) end
 
     conn = %Plug.Conn{}
     |> put_private(:phoenix_controller, SomeApplication.FakeController)

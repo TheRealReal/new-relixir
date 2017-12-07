@@ -14,24 +14,34 @@ defmodule NewRelixir do
   def start(_type \\ :normal, _args \\ []) do
     import Supervisor.Spec, warn: false
 
+    check_config()
+
     children = [
       worker(NewRelixir.Collector, []),
       worker(NewRelixir.Polling, [&NewRelixir.Stats.pull/0])
     ]
 
-    unless configured?() do
-      Logger.warn(
-        "Missing configuration for NewRelixir. No data will be sent to New Relic."
-      )
-    end
-
     opts = [strategy: :one_for_one, name: NewRelixir.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
-  @doc false
-  @spec configured? :: boolean
-  def configured? do
-    Application.get_env(:new_relixir, :application_name) != nil && Application.get_env(:new_relixir, :license_key) != nil
+  @doc """
+  Tells if New Relixir is configured correctly and pushing data to New Relic.
+  """
+  @spec active? :: boolean
+  def active? do
+    Application.get_env(:new_relixir, :active)
+  end
+
+  defp check_config do
+    application_name = Application.get_env(:new_relixir, :application_name)
+    license_key = Application.get_env(:new_relixir, :license_key)
+    valid_config = String.valid?(application_name) && String.valid?(license_key)
+
+    if valid_config, do: Logger.info fn ->
+      "New Relixir set up for '#{application_name}'."
+    end
+
+    Application.put_env(:new_relixir, :active, valid_config)
   end
 end

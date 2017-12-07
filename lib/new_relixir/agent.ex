@@ -8,7 +8,7 @@ defmodule NewRelixir.Agent do
   formatted data and registers it under the given hostname.
   """
   def push(hostname, data, errors) do
-    if NewRelixir.configured? do
+    if NewRelixir.active? do
       collector = get_redirect_host()
       run_id = connect(collector, hostname)
       case push_metric_data(collector, run_id, data) do
