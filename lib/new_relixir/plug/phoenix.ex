@@ -27,7 +27,7 @@ defmodule NewRelixir.Plug.Phoenix do
   end
 
   def call(conn, _config) do
-    if NewRelixir.configured? do
+    if NewRelixir.active? do
       module = conn |> controller_module |> short_module_name
       action = conn |> action_name |> Atom.to_string
       transaction_name = "#{module}##{action}"

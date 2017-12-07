@@ -32,7 +32,6 @@ defmodule NewRelixir.Polling do
     try do
       case pull_fun.() do
         {[], [], _internval} ->
-          Logger.debug "Nothing to send."
           :ok
         {metrics, errors, {start_time, end_time}} ->
           metrics = [
