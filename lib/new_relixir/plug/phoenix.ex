@@ -18,29 +18,37 @@ defmodule NewRelixir.Plug.Phoenix do
   """
 
   @behaviour Elixir.Plug
-  import Elixir.Phoenix.Controller
-  import Elixir.Plug.Conn
-  import NewRelixir.Utils
 
-  def init(opts) do
-    opts
-  end
+  alias NewRelixir.Utils
+  alias Plug.Conn
+
+  def init(opts), do: opts
 
   def call(conn, _config) do
     if NewRelixir.active? do
-      module = conn |> controller_module |> short_module_name
-      action = conn |> action_name |> Atom.to_string
-      transaction_name = "#{module}##{action}"
-
-      conn
-      |> put_private(:new_relixir_transaction, NewRelixir.Transaction.start(transaction_name))
-      |> register_before_send(fn conn ->
-        NewRelixir.Transaction.finish(Map.get(conn.private, :new_relixir_transaction))
-
-        conn
-      end)
+      record_transaction(conn)
     else
       conn
     end
+  end
+
+  defp record_transaction(conn) do
+    transaction = start_transaction(conn)
+
+    conn
+    |> Conn.put_private(:new_relixir_transaction, transaction)
+    |> Conn.register_before_send(&finish_transaction/1)
+  end
+
+  defp start_transaction(conn) do
+    NewRelixir.Transaction.start(Utils.transaction_name(conn))
+  end
+
+  defp finish_transaction(conn) do
+    transaction = Map.get(conn.private, :new_relixir_transaction)
+
+    NewRelixir.Transaction.finish(transaction)
+
+    conn
   end
 end
