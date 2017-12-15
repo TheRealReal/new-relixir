@@ -8,6 +8,8 @@ defmodule NewRelixir.Instrumenters.Phoenix do
       config :my_app, MyAppWeb.Endpoint,
         instrumenters: [NewRelixir.Instrumenters.Phoenix],
 
+  Transaction traces will be composed of both controller and action names, e.g.
+  `/HomeController#index`, `/ProfileController#update`.
   """
   alias NewRelixir.Utils
 

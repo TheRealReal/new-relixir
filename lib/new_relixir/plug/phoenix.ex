@@ -1,5 +1,7 @@
 defmodule NewRelixir.Plug.Phoenix do
   @moduledoc """
+  WARNING: this module is deprecated.
+
   A plug that instruments Phoenix controllers and records their response times in New Relic.
 
   Inside an instrumented controller's actions, `conn` can be used for further instrumentation with
@@ -22,7 +24,14 @@ defmodule NewRelixir.Plug.Phoenix do
   alias NewRelixir.Utils
   alias Plug.Conn
 
-  def init(opts), do: opts
+  def init(opts) do
+    IO.warn """
+      `NewRelixir.Plug.Phoenix` is deprecated; use `NewRelixir.Instrumenters.Phoenix`
+      instead. For Plug-based non-Phoenix projects, use `NewRelixir.Instrumenters.Plug`.
+    """, []
+
+    opts
+  end
 
   def call(conn, _config) do
     if NewRelixir.active? do
