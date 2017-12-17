@@ -85,6 +85,15 @@ defmodule NewRelixir.Plug.Repo do
         end)
       end
 
+
+      @spec insert_all(schema_or_source :: binary | {binary, Ecto.Schema.t} | Ecto.Schema.t,
+        entries :: [map | Keyword.t], opts :: Keyword.t) :: {integer, nil | [term]} | no_return
+      def insert_all(schema_or_source, entries, opts \\ []) do
+        instrument_db(:insert_all, schema_or_source, opts, fn() ->
+          repo().insert_all(schema_or_source, entries, opts)
+        end)
+      end
+
       @spec update_all(Macro.t, Keyword.t, Keyword.t) :: {integer, nil} | no_return
       def update_all(queryable, updates, opts \\ []) do
         instrument_db(:update_all, queryable, opts, fn() ->
