@@ -45,19 +45,18 @@ defmodule NewRelixir.Plug.Instrumentation do
   defp infer_model(%{__struct__: model_type, __meta__: %Ecto.Schema.Metadata{}}) do
     short_module_name(model_type)
   end
-  # Ecto 2.0 clause
-  defp infer_model(%{data: data}) do
+  defp infer_model(%{data: data}) do #ecto 2.0
     infer_model(data)
   end
-
   defp infer_model(%Ecto.Query{from: {_, model_type}}) do
     short_module_name(model_type)
   end
-
   defp infer_model(%Ecto.Query{}) do
     nil
   end
-
+  defp infer_model([first_queryable | _others]) do
+    infer_model(first_queryable)
+  end
   defp infer_model(queryable) do
     infer_model(Ecto.Queryable.to_query(queryable))
   end

@@ -16,7 +16,6 @@ defmodule NewRelixir.Plug.InstrumentationTest do
   end
 
   # query names
-
   test "instrument_db records elapsed time with correct key when given custom query string", %{conn: conn} do
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: conn, query: "TestQuery"], fn -> nil end)
     assert_contains(get_metric_keys(), {@transaction_name, {:db, "TestQuery"}})
@@ -24,6 +23,11 @@ defmodule NewRelixir.Plug.InstrumentationTest do
 
   test "instrument_db infers query name from instance of Ecto model and action name", %{conn: conn} do
     Instrumentation.instrument_db(:foo, %FakeModel{}, [conn: conn], fn -> nil end)
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
+  end
+
+  test "instrument_db infers query name from first of list of structs", %{conn: conn}  do
+    Instrumentation.instrument_db(:foo, [%FakeModel{}, :should_be_same_but_doesnt_matter], [conn: conn], fn -> nil end)
     assert_contains(get_metric_keys(), {@transaction_name, {:db, "FakeModel.foo"}})
   end
 
