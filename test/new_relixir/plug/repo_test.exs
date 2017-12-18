@@ -428,20 +428,24 @@ defmodule NewRelixir.Plug.RepoTest do
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
-  # preload
+  describe "preload/3" do
+    test "calls repo's preload method", %{conn: conn} do
+      assert Repo.preload(%FakeModel{}, [:foo, :bar], conn: conn) == FakeRepo.preload(%FakeModel{}, [:foo, :bar])
+    end
 
-  test "preload calls repo's preload method", %{conn: conn} do
-    assert Repo.preload(%FakeModel{}, [:foo, :bar], conn: conn) == FakeRepo.preload(%FakeModel{}, [:foo, :bar])
-  end
+    test "works with list of structs", %{conn: conn}  do
+      assert Repo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar], conn: conn) == FakeRepo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar])
+    end
 
-  test "records time to call repo's preload method", %{conn: conn} do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.preload(%FakeModel{}, [:foo, :bar], conn: conn)
-      time
-    end)
+    test "records time to call repo's preload method", %{conn: conn} do
+      {elapsed_time, sleep_time} = :timer.tc(fn ->
+        {time, _, _} = Repo.preload(%FakeModel{}, [:foo, :bar], conn: conn)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.preload"}})
-    assert_between(recorded_time, sleep_time, elapsed_time)
+      [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.preload"}})
+      assert_between(recorded_time, sleep_time, elapsed_time)
+    end
   end
 
   # transaction
