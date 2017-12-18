@@ -51,6 +51,10 @@ defmodule NewRelixir.Plug.RepoTest do
       record_call(:one!, [queryable, Keyword.delete(opts, :conn)])
     end
 
+    def insert_all(schema_or_source, entries, opts \\ []) do
+      record_call(:insert_all, [schema_or_source, entries, Keyword.delete(opts, :conn)])
+    end
+
     def update_all(queryable, updates, opts \\ []) do
       record_call(:update_all, [queryable, updates, Keyword.delete(opts, :conn)])
     end
@@ -251,6 +255,23 @@ defmodule NewRelixir.Plug.RepoTest do
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.one!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
+
+  describe "insert_all/3" do
+    test "insert_all calls repo's insert_all method", %{conn: conn} do
+      assert Repo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]], conn: conn) == FakeRepo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]])
+    end
+
+    test "records time to call repo's insert_all method", %{conn: conn} do
+      {elapsed_time, sleep_time} = :timer.tc(fn ->
+        {time, _, _} = Repo.insert_all(FakeModel, [%{name: "Bob"}, %{name: "Jake"}], conn: conn)
+        time
+      end)
+
+      [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_all"}})
+      assert_between(recorded_time, sleep_time, elapsed_time)
+    end
+  end
+
 
   # update_all
 
