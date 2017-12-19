@@ -1,5 +1,5 @@
 defmodule NewRelixir.Plug.InstrumentationTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
 
   import TestHelpers.Assertions
 

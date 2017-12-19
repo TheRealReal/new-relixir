@@ -1,10 +1,10 @@
 defmodule NewRelixir.Plug.PhoenixTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
 
-  import Plug.Conn
   import TestHelpers.Assertions
 
   alias NewRelixir.CurrentTransaction
+  alias Plug.Conn
 
   @moduletag configured: true
 
@@ -13,9 +13,10 @@ defmodule NewRelixir.Plug.PhoenixTest do
     Application.put_env(:new_relixir, :active, configured)
     on_exit fn -> Application.put_env(:new_relixir, :active, previous_setting) end
 
-    conn = %Plug.Conn{}
-    |> put_private(:phoenix_controller, SomeApplication.FakeController)
-    |> put_private(:phoenix_action, :test_action)
+    conn =
+      %Conn{}
+      |> Conn.put_private(:phoenix_controller, SomeApplication.FakeController)
+      |> Conn.put_private(:phoenix_action, :test_action)
 
     {:ok, conn: conn}
   end
