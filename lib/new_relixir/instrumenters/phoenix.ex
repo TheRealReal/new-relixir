@@ -11,17 +11,21 @@ defmodule NewRelixir.Instrumenters.Phoenix do
   Transaction traces will be composed of both controller and action names, e.g.
   `/HomeController#index`, `/ProfileController#update`.
   """
-  alias NewRelixir.Utils
+  alias NewRelixir.{CurrentTransaction, Transaction, Utils}
 
   def phoenix_controller_call(:start, _compile_metadata, %{conn: conn}) do
-    if NewRelixir.active?, do: Utils.transaction_name(conn)
+    if NewRelixir.active? do
+      transaction = Utils.transaction_name(conn)
+      CurrentTransaction.set(transaction)
+      transaction
+    end
   end
 
-  def phoenix_controller_call(:stop, elapsed_time, transaction_name) do
+  def phoenix_controller_call(:stop, elapsed_time, transaction) do
     if NewRelixir.active? do
       elapsed_microseconds = System.convert_time_unit(elapsed_time, :native, :microsecond)
 
-      NewRelixir.Collector.record_value({transaction_name, :total}, elapsed_microseconds)
+      Transaction.record_web(transaction, elapsed_microseconds)
     end
   end
 end

@@ -19,9 +19,9 @@ defmodule NewRelixir.Plug.Phoenix do
   ```
   """
 
-  @behaviour Elixir.Plug
+  @behaviour Plug
 
-  alias NewRelixir.Utils
+  alias NewRelixir.{CurrentTransaction, Transaction, Utils}
   alias Plug.Conn
 
   def init(opts) do
@@ -42,22 +42,18 @@ defmodule NewRelixir.Plug.Phoenix do
   end
 
   defp record_transaction(conn) do
-    transaction = start_transaction(conn)
+    transaction = Utils.transaction_name(conn)
+    CurrentTransaction.set(transaction)
 
-    conn
-    |> Conn.put_private(:new_relixir_transaction, transaction)
-    |> Conn.register_before_send(&finish_transaction/1)
-  end
+    start = System.monotonic_time()
 
-  defp start_transaction(conn) do
-    NewRelixir.Transaction.start(Utils.transaction_name(conn))
-  end
+    Conn.register_before_send(conn, fn conn ->
+      stop = System.monotonic_time()
+      elapsed_microseconds = System.convert_time_unit(stop - start, :native, :microsecond)
 
-  defp finish_transaction(conn) do
-    transaction = Map.get(conn.private, :new_relixir_transaction)
+      Transaction.record_web(transaction, elapsed_microseconds)
 
-    NewRelixir.Transaction.finish(transaction)
-
-    conn
+      conn
+    end)
   end
 end

@@ -24,8 +24,9 @@ defmodule NewRelixir.Instrumenters.Plug do
   ```
   """
 
-  @behaviour Elixir.Plug
+  @behaviour Plug
 
+  alias NewRelixir.{CurrentTransaction, Transaction}
   alias Plug.Conn
 
   def init(opts), do: opts
@@ -38,24 +39,19 @@ defmodule NewRelixir.Instrumenters.Plug do
     end
   end
 
-  defp record_transaction(conn) do
-    transaction = start_transaction(conn)
+  defp record_transaction(%Conn{request_path: "/" <> path, method: method} = conn) do
+    transaction = "#{path}##{method}"
+    CurrentTransaction.set(transaction)
 
-    conn
-    |> Conn.put_private(:new_relixir_transaction, transaction)
-    |> Conn.register_before_send(&finish_transaction/1)
-  end
+    start = System.monotonic_time()
 
-  defp start_transaction(%Conn{request_path: "/" <> path, method: method}) do
-    transaction_name = "#{path}##{method}"
-    NewRelixir.Transaction.start(transaction_name)
-  end
+    Conn.register_before_send(conn, fn conn ->
+      stop = System.monotonic_time()
+      elapsed_microseconds = System.convert_time_unit(stop - start, :native, :microsecond)
 
-  defp finish_transaction(conn) do
-    transaction = Map.get(conn.private, :new_relixir_transaction)
+      Transaction.record_web(transaction, elapsed_microseconds)
 
-    NewRelixir.Transaction.finish(transaction)
-
-    conn
+      conn
+    end)
   end
 end

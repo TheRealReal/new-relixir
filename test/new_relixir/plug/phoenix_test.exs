@@ -1,8 +1,10 @@
 defmodule NewRelixir.Plug.PhoenixTest do
   use ExUnit.Case, async: false
-  import TestHelpers.Assertions
 
   import Plug.Conn
+  import TestHelpers.Assertions
+
+  alias NewRelixir.CurrentTransaction
 
   @moduletag configured: true
 
@@ -18,14 +20,9 @@ defmodule NewRelixir.Plug.PhoenixTest do
     {:ok, conn: conn}
   end
 
-  test "it assigns a transaction to the connection", %{conn: conn} do
-    conn = NewRelixir.Plug.Phoenix.call(conn, nil)
-    assert_is_struct(conn.private[:new_relixir_transaction], NewRelixir.Transaction)
-  end
-
   test "it generates a transaction name based on controller and action names", %{conn: conn} do
-    conn = NewRelixir.Plug.Phoenix.call(conn, nil)
-    assert conn.private[:new_relixir_transaction].name == "FakeController#test_action"
+    NewRelixir.Plug.Phoenix.call(conn, [])
+    assert {:ok, "FakeController#test_action"} == CurrentTransaction.get()
   end
 
   test "it records the elapsed time of the controller action", %{conn: conn} do
