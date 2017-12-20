@@ -1,9 +1,10 @@
 # New Relixir
 
-Instrument your Phoenix applications with New Relic.
+Instrument your Phoenix and Plug applications with New Relic.
 
-New Relixir currently supports instrumenting Phoenix controllers and Ecto repositories to record
-response times for web transactions and database queries.
+New Relixir currently supports instrumenting bare-bones Plug endpoints, Phoenix
+controllers and Ecto repositories, to record response times of web transactions
+and database queries.
 
 * [Documentation](https://hexdocs.pm/new_relixir/)
 
@@ -44,8 +45,19 @@ Phoenix application named `MyApp`.
       license_key: System.get_env("NEWRELIC_LICENSE_KEY")
     ```
 
+3.  Add `NewRelixir.Instrumenters.Phoenix` to the list of instrumenters in your `Endpoint`
+    configuration:
 
-3.  Define a module to wrap your repository's methods with New Relic instrumentation:
+    ```elixir
+    # config/config.exs
+
+    config :my_app, MyAppWeb.Endpoint,
+      instrumenters: [NewRelixir.Instrumenters.Phoenix],
+      # ...
+    ```
+
+4.  If your app also uses `Ecto`, define a module to wrap your repository's methods with
+    New Relic instrumentation:
 
     ```elixir
     # lib/my_app/repo.ex
@@ -59,30 +71,48 @@ Phoenix application named `MyApp`.
     end
     ```
 
-    Now `MyApp.Repo.NewRelic` can be used as a substitute for `MyApp.Repo`. If a `Plug.Conn` is
-    provided as the `:conn` option to any of the wrapper's methods, it will instrument the response
-    time for that call. Otherwise, the repository will behave the same as the repository that it
-    wraps.
+    Now `MyApp.Repo.NewRelic` can be used as a substitute for `MyApp.Repo`. It will dispatch
+    and instrument the response time for all `Repo` calls.
 
-4.  For any Phoenix controller that you want to instrument, add `NewRelixir.Plug.Phoenix` and
-    replace existing aliases to your application's repository with an alias to your New Relic
-    repository wrapper. If instrumenting all controllers, update `web/web.ex`:
+    If you've defined custom functions on your `Repo`, you will need to define them on your
+    wrapper module as well. In the wrapper module, simply call your repository's original
+    function inside a closure that you pass to `instrument_db`:
 
     ```elixir
-    # web/web.ex
+    # lib/my_app/repo.ex
 
-    defmodule MyApp.Web do
-      def controller do
-        quote do
-          # ...
-          plug NewRelixir.Plug.Phoenix
-          alias MyApp.Repo.NewRelic, as: Repo # Replaces `alias MyApp.Repo`
+    defmodule MyApp.Repo do
+      use Ecto.Repo, otp_app: :my_app
+
+      def my_custom_operation(queryable, opts \\ []) do
+        # ...
+      end
+
+      defmodule NewRelic do
+        use NewRelixir.Plug.Repo, repo: MyApp.Repo
+
+        def my_custom_operation(queryable, opts \\ []) do
+          instrument_db(:my_custom_operation, queryable, opts, fn() ->
+            MyApp.Repo.my_custom_operation(queryable, opts)
+          end)
         end
       end
     end
     ```
 
-5.  Update your controllers to pass `conn` as an option to your New Relic repo wrapper:
+    When using the wrapper module's `my_custom_operation`, the time it takes to call
+    `MyApp.Repo.my_custom_operation/2` will be recorded to New Relic.
+
+## Upgrading from 0.3.x
+
+1.  Remove `NewRelixir.Plug.Phoenix` from your Plug pipeline and all further references to
+    that module.
+
+2.  Add `NewRelixir.Instrumenters.Phoenix` to the list of instrumenters in your `Endpoint`
+    configuration. See more in [usage](#usage).
+
+3.  Passing a `conn` to the functions of your `Repo` wrapper is no longer required, calls
+    to the wrapper can now be made the same way as calls to the original `Repo`:
 
     ```elixir
     # web/controllers/users.ex
@@ -91,42 +121,14 @@ Phoenix application named `MyApp`.
       use MyApp.Web, :controller
 
       def index(conn, _params) do
-        users = Repo.all(User, conn: conn) # Replaces `Repo.all(User)`
-        # ...
+        # Before
+        users = Repo.all(User, conn: conn)
+
+        # Now
+        users = Repo.all(User)
       end
     end
     ```
-
-### Instrumenting Custom Repo Methods
-
-If you've defined custom methods on your repository, you will need to define them on your wrapper
-module as well. In the wrapper module, simply call your repository's original method inside a
-closure that you pass to `instrument_db`:
-
-```elixir
-# lib/my_app/repo.ex
-
-defmodule MyApp.Repo do
-  use Ecto.Repo, otp_app: :my_app
-
-  def custom_method(queryable, opts \\ []) do
-    # ...
-  end
-
-  defmodule NewRelic do
-    use NewRelixir.Plug.Repo, repo: MyApp.Repo
-
-    def custom_method(queryable, opts \\ []) do
-      instrument_db(:custom_method, queryable, opts, fn() ->
-        MyApp.Repo.custom_method(queryable, opts)
-      end)
-    end
-  end
-end
-```
-
-When using the wrapper module's `custom_method`, the time it takes to call
-`MyApp.Repo.custom_method/2` will be recorded to New Relic.
 
 ## Copyright
 
