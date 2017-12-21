@@ -10,12 +10,13 @@ defmodule NewRelixir.Plug.Instrumentation do
   @doc """
   Instruments a database call and records the elapsed time.
 
-  * `action` is the name of the repository method being instrumented.
+  * `action` is the name of the repository function being instrumented.
   * `queryable` is the `Queryable` being passed to the repository.
+  * `opts` is a keyword list of overrides to parts of the recorded transaction name.
   * `f` is the function to be instrumented.
 
-  By default, the query name will be infered from `queryable` and `action`. This can be overriden
-  by providing a `:query` option in `opts`.
+  By default, the query name will be inferred from `queryable` and `action`. This
+  can be overriden by providing a `:query` option in `opts`.
   """
   @spec instrument_db(atom, Ecto.Queryable.t, Keyword.t, fun) :: any
   def instrument_db(action, queryable, opts, f) do

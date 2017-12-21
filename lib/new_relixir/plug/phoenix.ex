@@ -4,16 +4,22 @@ defmodule NewRelixir.Plug.Phoenix do
 
   A plug that instruments Phoenix controllers and records their response times in New Relic.
 
-  Inside an instrumented controller's actions, `conn` can be used for further instrumentation with
-  `NewRelixir.Plug.Instrumentation` and `NewRelixir.Plug.Repo`.
+  Inside an instrumented controller's actions, instrumented `Repo` calls will be scoped
+  under the current web transaction.
 
   ```
-  defmodule MyApp.UsersController do
+  defmodule MyApp.UserController do
     use Phoenix.Controller
+
     plug NewRelixir.Plug.Phoenix
 
+    alias MyApp.Repo.NewRelic, as: Repo
+
     def index(conn, _params) do
-      # `conn` is setup for instrumentation
+      users = Repo.all(User)
+      # This database call is recorded as `Repo.all` under `UserController#index`.
+
+      render(conn, "index.html", users: users)
     end
   end
   ```

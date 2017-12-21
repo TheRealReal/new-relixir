@@ -2,11 +2,8 @@ defmodule NewRelixir.Instrumenters.Plug do
   @moduledoc """
   New Relic instrumenter for raw Plug endpoints.
 
-  Transaction records are composed of the current request path and method, e.g.
-  `/path/to/my-page#GET`, `/path/to/update#POST`.
-
-  To start recording, add `plug NewRelixir.Instrumenters.Plug` at the beginning of
-  your pipeline:
+  To start recording, attach `plug NewRelixir.Instrumenters.Plug` at the
+  beginning of your pipeline:
 
   ```
   defmodule MyApp.PlugRouter do
@@ -22,6 +19,9 @@ defmodule NewRelixir.Instrumenters.Plug do
     end
   end
   ```
+
+  Transaction records are composed of the current request path and method, e.g.
+  `/path/to/my-page#GET`, `/path/to/update#POST`.
   """
 
   @behaviour Plug
