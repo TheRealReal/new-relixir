@@ -1,18 +1,18 @@
 defmodule NewRelixir.Plug.InstrumentationTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
+
   import TestHelpers.Assertions
-  import Plug.Conn
-  require Ecto.Query
 
   alias NewRelixir.Plug.Instrumentation
+
+  require Ecto.Query
 
   @transaction_name "TestTransaction"
 
   setup do
-    conn = %Plug.Conn{}
-    |> put_private(:new_relixir_transaction, NewRelixir.Transaction.start(@transaction_name))
+    NewRelixir.CurrentTransaction.set(@transaction_name)
 
-    {:ok, conn: conn}
+    {:ok, conn: %Plug.Conn{}}
   end
 
   # query names
@@ -76,12 +76,14 @@ defmodule NewRelixir.Plug.InstrumentationTest do
   # with no transaction
 
   test "instrument_db does not record elapsed time when transaction is not present" do
+    Process.delete(:new_relixir_transaction)
     get_metric_keys()
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: %Plug.Conn{}], fn -> nil end)
-    assert Enum.empty?(get_metric_keys())
+    assert [] == get_metric_keys()
   end
 
   test "instrument_db returns value of instrumented function when transaction is not present" do
+    Process.delete(:new_relixir_transaction)
     return_value = Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: %Plug.Conn{}], fn ->
       42
     end)

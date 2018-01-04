@@ -12,11 +12,11 @@ defmodule NewRelixir.Plug.Repo do
   end
   ```
 
-  Anywhere that the original repository is used to make a database call, the wrapper module can be
-  used by adding a `Plug.Conn` as the first argument. For example, `MyApp.Repo.all(User)` can be
-  replaced with `MyApp.Repo.NewRelic.all(conn, User)`. No changes are needed for `transaction()`
-  and `rollback()`. The `Plug.Conn` that's used with query methods must be one that was setup by
-  `NewRelixir.Plug.Phoenix`.
+  Anywhere that the original repository is used to make a database call, the
+  wrapper module can be used instead. For example, `MyApp.Repo.all(User)` can
+  be replaced with `MyApp.Repo.NewRelic.all(User)`. These database calls must
+  be done in the scope of an instrumented Phoenix controller or Plug endpoint.
+  Calls made from spawned child subprocesses are supported.
   """
 
   defmacro __using__(opts) do

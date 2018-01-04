@@ -1,18 +1,22 @@
 defmodule NewRelixir.Plug.Instrumentation do
   @moduledoc """
-  Utility methods for instrumenting parts of an Elixir app.
+  Utility methods for instrumenting parts of an Ecto app.
   """
+
   import NewRelixir.Utils
+
+  alias NewRelixir.{CurrentTransaction, Transaction}
 
   @doc """
   Instruments a database call and records the elapsed time.
 
-  * `conn` should be a `Plug.Conn` that has been configured by `NewRelixir.Plug.Phoenix`.
-  * `action` is the name of the repository method being instrumented.
+  * `action` is the name of the repository function being instrumented.
   * `queryable` is the `Queryable` being passed to the repository.
+  * `opts` is a keyword list of overrides to parts of the recorded transaction name.
+  * `f` is the function to be instrumented.
 
-  By default, the query name will be infered from `queryable` and `action`. This can be overriden
-  by providing a `:query` option in `opts`.
+  By default, the query name will be inferred from `queryable` and `action`. This
+  can be overriden by providing a `:query` option in `opts`.
   """
   @spec instrument_db(atom, Ecto.Queryable.t, Keyword.t, fun) :: any
   def instrument_db(action, queryable, opts, f) do
@@ -62,9 +66,13 @@ defmodule NewRelixir.Plug.Instrumentation do
   end
 
   defp record(opts, elapsed) do
-    with {:ok, conn} <- Keyword.fetch(opts, :conn),
-         {:ok, transaction} <- Map.fetch(conn.private, :new_relixir_transaction),
-      do: NewRelixir.Transaction.record_db(transaction, get_query(opts), elapsed)
+    case CurrentTransaction.get() do
+      {:ok, transaction} ->
+        query = get_query(opts)
+        Transaction.record_db(transaction, query, elapsed)
+      error ->
+        error
+    end
   end
 
   defp get_query(opts) do
@@ -75,7 +83,7 @@ defmodule NewRelixir.Plug.Instrumentation do
       :error ->
         case {Keyword.fetch(opts, :model), Keyword.fetch(opts, :action)} do
           {{:ok, model}, {:ok, action}} ->
-            {model, action}
+            "#{model}.#{action}"
 
           _ ->
             "SQL"

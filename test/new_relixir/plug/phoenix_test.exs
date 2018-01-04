@@ -1,8 +1,10 @@
 defmodule NewRelixir.Plug.PhoenixTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
+
   import TestHelpers.Assertions
 
-  import Plug.Conn
+  alias NewRelixir.CurrentTransaction
+  alias Plug.Conn
 
   @moduletag configured: true
 
@@ -11,21 +13,17 @@ defmodule NewRelixir.Plug.PhoenixTest do
     Application.put_env(:new_relixir, :active, configured)
     on_exit fn -> Application.put_env(:new_relixir, :active, previous_setting) end
 
-    conn = %Plug.Conn{}
-    |> put_private(:phoenix_controller, SomeApplication.FakeController)
-    |> put_private(:phoenix_action, :test_action)
+    conn =
+      %Conn{}
+      |> Conn.put_private(:phoenix_controller, SomeApplication.FakeController)
+      |> Conn.put_private(:phoenix_action, :test_action)
 
     {:ok, conn: conn}
   end
 
-  test "it assigns a transaction to the connection", %{conn: conn} do
-    conn = NewRelixir.Plug.Phoenix.call(conn, nil)
-    assert_is_struct(conn.private[:new_relixir_transaction], NewRelixir.Transaction)
-  end
-
   test "it generates a transaction name based on controller and action names", %{conn: conn} do
-    conn = NewRelixir.Plug.Phoenix.call(conn, nil)
-    assert conn.private[:new_relixir_transaction].name == "FakeController#test_action"
+    NewRelixir.Plug.Phoenix.call(conn, [])
+    assert {:ok, "FakeController#test_action"} == CurrentTransaction.get()
   end
 
   test "it records the elapsed time of the controller action", %{conn: conn} do
