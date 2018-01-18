@@ -15,8 +15,8 @@ defmodule NewRelixir.Plug.RepoTest do
     def stop(_pid, _timeout \\ 5000) do
     end
 
-    def transaction(opts \\ [], fun) when is_list(opts) do
-      record_call(:transaction, [opts, fun])
+    def transaction(fun, opts \\ []) when is_list(opts) do
+      record_call(:transaction, [fun, opts])
     end
 
     def rollback(value) do
