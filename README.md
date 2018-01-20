@@ -1,4 +1,4 @@
-# New Relixir
+# New Relixir [![Build Status](https://travis-ci.org/TheRealReal/new-relixir.svg?branch=master)](https://travis-ci.org/TheRealReal/new-relixir)
 
 Instrument your Phoenix and Plug applications with New Relic.
 
