@@ -29,7 +29,7 @@ Phoenix application named `MyApp`.
       end
 
       defp deps do
-        [{:new_relixir, "~> 0.4.0"}]
+        [{:new_relixir, "~> 0.4.1"}]
       end
     end
     ```

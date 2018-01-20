@@ -1,3 +1,6 @@
+# Version 0.4.1
+* Fix Ecto.Repo.transaction arguments [#35](https://github.com/TheRealReal/new-relixir/pull/37)
+
 # Version 0.4.0
 
 *  Support Phoenix built-in instrumentation [#31](https://github.com/TheRealReal/new-relixir/pull/31)
