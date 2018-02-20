@@ -4,6 +4,10 @@ defmodule NewRelixir.TransactionTest do
   import TestHelpers.Assertions
 
   alias NewRelixir.Transaction
+  setup do
+    start_supervised(NewRelixir.Collector)
+    :ok
+  end
 
   describe "record_web/2" do
     test "adds web transactions to the collector" do

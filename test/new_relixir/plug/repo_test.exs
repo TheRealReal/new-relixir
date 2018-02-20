@@ -1,5 +1,5 @@
 defmodule NewRelixir.Plug.RepoTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case
 
   defmodule FakeRepo do
     @behaviour Ecto.Repo
@@ -132,11 +132,11 @@ defmodule NewRelixir.Plug.RepoTest do
 
   alias NewRelixir.Plug.RepoTest.FakeRepo.NewRelic, as: Repo
 
-  @transaction_name "TestTransaction"
+  @transaction_name "TestRepoTransaction"
 
   setup do
     NewRelixir.CurrentTransaction.set(@transaction_name)
-
+    start_supervised(NewRelixir.Collector)
     :ok
   end
 

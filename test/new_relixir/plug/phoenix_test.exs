@@ -27,6 +27,8 @@ defmodule NewRelixir.Plug.PhoenixTest do
   end
 
   test "it records the elapsed time of the controller action", %{conn: conn} do
+    start_supervised(NewRelixir.Collector)
+
     {_, elapsed_time} = :timer.tc(fn() ->
       conn = NewRelixir.Plug.Phoenix.call(conn, nil)
       :ok = :timer.sleep(42)

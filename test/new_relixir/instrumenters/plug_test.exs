@@ -24,6 +24,11 @@ defmodule NewRelixir.Instrumenters.PlugTest do
     end
   end
 
+  setup do
+    start_supervised(NewRelixir.Collector)
+    :ok
+  end
+
   setup %{configured: configured} do
     previous_setting = Application.get_env(:new_relixir, :active)
     Application.put_env(:new_relixir, :active, configured)
