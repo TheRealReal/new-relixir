@@ -10,6 +10,7 @@ defmodule NewRelixir.Plug.InstrumentationTest do
   @transaction_name "TestTransaction"
 
   setup do
+    start_supervised(NewRelixir.Collector)
     NewRelixir.CurrentTransaction.set(@transaction_name)
 
     {:ok, conn: %Plug.Conn{}}
@@ -77,7 +78,6 @@ defmodule NewRelixir.Plug.InstrumentationTest do
 
   test "instrument_db does not record elapsed time when transaction is not present" do
     Process.delete(:new_relixir_transaction)
-    get_metric_keys()
     Instrumentation.instrument_db(:foo, %Ecto.Query{}, [conn: %Plug.Conn{}], fn -> nil end)
     assert [] == get_metric_keys()
   end
