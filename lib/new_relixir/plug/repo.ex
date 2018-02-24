@@ -57,14 +57,14 @@ defmodule NewRelixir.Plug.Repo do
         end)
       end
 
-      @spec get_by(Ecto.Queryable.t, Keyword.t | Map.t, Keyword.t) :: Ecto.Schema.t | nil | no_return
+      @spec get_by(Ecto.Queryable.t, Keyword.t | map, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get_by(queryable, clauses, opts \\ []) do
         instrument_db(:get_by, queryable, opts, fn() ->
           repo().get_by(queryable, clauses, opts)
         end)
       end
 
-      @spec get_by!(Ecto.Queryable.t, Keyword.t | Map.t, Keyword.t) :: Ecto.Schema.t | nil | no_return
+      @spec get_by!(Ecto.Queryable.t, Keyword.t | map, Keyword.t) :: Ecto.Schema.t | nil | no_return
       def get_by!(queryable, clauses, opts \\ []) do
         instrument_db(:get_by!, queryable, opts, fn() ->
           repo().get_by!(queryable, clauses, opts)
