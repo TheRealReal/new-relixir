@@ -47,7 +47,7 @@ defmodule NewRelixir.Agent do
       :identifier => app_name(),
       :pid => l2i(:os.getpid()),
       :environment => [],
-      :language => Application.get_env(:new_relic, :language, "python"),
+      :language => Application.get_env(:new_relixir, :language, "python"),
       :settings => %{}
     }]
 

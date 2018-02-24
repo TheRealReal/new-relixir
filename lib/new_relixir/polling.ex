@@ -2,7 +2,7 @@ defmodule NewRelixir.Polling do
   use GenServer
   require Logger
 
-  @polling_interval Application.get_env(:new_relic, :polling_interval) || 30_000
+  @polling_interval Application.get_env(:new_relixir, :polling_interval) || 30_000
 
   ## API
 
