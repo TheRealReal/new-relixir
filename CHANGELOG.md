@@ -1,3 +1,8 @@
+# Version 0.4.2
+* Fix polling and language setting config keys  [#43](https://github.com/TheRealReal/new-relixir/pull/43)
+* Fix test race condition  [#42](https://github.com/TheRealReal/new-relixir/pull/42)
+* Fix Dialyzer types  [#41](https://github.com/TheRealReal/new-relixir/pull/41)
+
 # Version 0.4.1
 * Fix Ecto.Repo.transaction arguments [#35](https://github.com/TheRealReal/new-relixir/pull/37)
 
