@@ -14,17 +14,18 @@ defmodule NewRelixir.Stats do
     {[webtransaction_total(ms), db_total(ms) | errors_total(errs) ++ ms], errs, time}
   end
 
+  def transform_error_counter({{scope, {type, message}}, count}), do: transform_error_counter({{scope, type, message}, count})
   def transform_error_counter({{scope, type, message}, count}) do
     error = [
       :os.system_time(:micro_seconds) / 1_000_000,
       scope2bin(scope),
       to_string(message),
       to_string(type),
-      [%{
+      %{
         parameter_groups: %{},
         stack_trace: [],
         request_params: %{},
-        request_uri: scope}]
+        request_uri: scope}
     ]
     List.duplicate(error, count)
   end

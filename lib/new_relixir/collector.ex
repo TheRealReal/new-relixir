@@ -11,8 +11,19 @@ defmodule NewRelixir.Collector do
     GenServer.cast(@name, {:record_value, {name, data}, elapsed})
   end
 
+  def record_error(transaction_name, {type, %{__exception__: true} = error}) do
+    GenServer.cast(@name, {:record_error, {transaction_name, error_from_exception(type, error)}})
+  end
   def record_error(transaction_name, {type, message}) do
     GenServer.cast(@name, {:record_error, {transaction_name, type, message}})
+  end
+
+  defp error_from_exception(:error, exception) do
+    normalized = Exception.normalize(:error, exception)
+    {normalized.__struct__, Exception.message(normalized)}
+  end
+  defp error_from_exception(type, exception) do
+    {type, Exception.format_banner(type, exception)}
   end
 
   def pull do
