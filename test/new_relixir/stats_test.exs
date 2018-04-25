@@ -35,12 +35,12 @@ defmodule NewRelixir.StatsTest do
       assert scope == "WebTransaction/Uri/home/index"
       assert message == "no function clause matching"
       assert error == "FunctionClauseError"
-      assert details == [%{
+      assert details == %{
         parameter_groups: %{},
         request_params: %{},
         request_uri: "home/index",
         stack_trace: []
-      }]
+      }
     end
   end
 end

@@ -1,5 +1,5 @@
 defmodule NewRelixir.Plug.Exception do
-  defmacro __using__(env) do
+  defmacro __using__ do
     quote location: :keep do
       use Plug.ErrorHandler
 
