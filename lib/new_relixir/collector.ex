@@ -12,7 +12,7 @@ defmodule NewRelixir.Collector do
   end
 
   def record_error(transaction_name, {type, %{__exception__: true} = error}) do
-    GenServer.cast(@name, {:record_error, {transaction_name, error_from_exception(type, error)}})
+    GenServer.cast(@name, {:record_error, List.to_tuple(List.flatten([transaction_name, error_from_exception(type, error)]))})
   end
   def record_error(transaction_name, {type, message}) do
     GenServer.cast(@name, {:record_error, {transaction_name, type, message}})
@@ -20,10 +20,10 @@ defmodule NewRelixir.Collector do
 
   defp error_from_exception(:error, exception) do
     normalized = Exception.normalize(:error, exception)
-    {normalized.__struct__, Exception.message(normalized)}
+    [normalized.__struct__, Exception.message(normalized)]
   end
   defp error_from_exception(type, exception) do
-    {type, Exception.format_banner(type, exception)}
+    [type, Exception.format_banner(type, exception)]
   end
 
   def pull do
