@@ -1,5 +1,5 @@
 defmodule NewRelixir.Plug.Exception do
-  defmacro __using__ do
+  defmacro __using__(_) do
     quote location: :keep do
       use Plug.ErrorHandler
 
@@ -23,7 +23,7 @@ defmodule NewRelixir.Plug.Exception do
             _ -> nil
           end
 
-        NewRelixir.Transaction.notice_error(transaction, {kind, reason})
+        NewRelixir.Transaction.record_error(transaction, {kind, reason})
       end
 
       defoverridable handle_errors: 2
