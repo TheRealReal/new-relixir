@@ -15,7 +15,7 @@ defmodule NewRelixir.Plug.Exception do
         end
       end
 
-      defp handle_errors(conn, %{kind: kind, reason: reason}) do
+      defp handle_errors(conn, %{kind: kind, reason: reason} = error) do
         transaction =
           case NewRelixir.CurrentTransaction.get() do
             {:ok, transaction} -> transaction
@@ -24,6 +24,7 @@ defmodule NewRelixir.Plug.Exception do
           end
 
         NewRelixir.Transaction.record_error(transaction, {kind, reason})
+        super(conn, error)
       end
 
       defoverridable handle_errors: 2

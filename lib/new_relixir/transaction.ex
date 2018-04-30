@@ -8,20 +8,10 @@ defmodule NewRelixir.Transaction do
   @doc """
   Send an error to New Relic
   """
-  @spec record_error(transaction :: binary, error :: {binary, binary}) :: :ok
+  @spec record_error(transaction :: binary, error :: {binary, binary | Exception.t}) :: :ok
   def record_error(transaction, {type, message})
-      when is_binary(transaction)
-      and is_binary(message) do
+    when is_binary(transaction) do
     Collector.record_error(transaction, {type, message})
-  end
-
-  @doc """
-  Send an exception to New Relic
-  """
-  @spec record_error(transaction :: binary, error :: {binary, Exception.t}) :: :ok
-  def record_error(transaction, {type, exception})
-      when is_binary(transaction) do
-    Collector.record_error(transaction, {type, exception})
   end
 
   @doc """
