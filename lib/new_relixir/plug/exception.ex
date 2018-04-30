@@ -3,14 +3,14 @@ defmodule NewRelixir.Plug.Exception do
     quote location: :keep do
       use Plug.ErrorHandler
 
-      # Ignore 404s for Plug routes
-      defp handle_errors(conn, %{reason: %FunctionClauseError{function: :do_match}}) do
-        nil
+      if :code.is_loaded(Phoenix) do
+        defp handle_errors(_conn, %{reason: %Phoenix.Router.NoRouteError{}}) do
+          nil
+        end
       end
 
-      if :code.is_loaded(Phoenix) do
-        # Ignore 404s for Phoenix routes
-        defp handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{}}) do
+      if :code.is_loaded(Ecto) do
+        defp handle_errors(conn, %{reason: %Ecto.NoResultsError{}}) do
           nil
         end
       end
