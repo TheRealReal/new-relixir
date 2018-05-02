@@ -2,6 +2,7 @@ defmodule NewRelixir.Plug.Exception do
   defmacro __using__(_) do
     quote location: :keep do
       use Plug.ErrorHandler
+      import NewRelixir.Plug.Exception
 
       if :code.is_loaded(Phoenix) do
         defp handle_errors(_conn, %{reason: %Phoenix.Router.NoRouteError{}}) do
@@ -23,11 +24,14 @@ defmodule NewRelixir.Plug.Exception do
             _ -> nil
           end
 
-        NewRelixir.Transaction.record_error(transaction, {kind, reason})
-        super(conn, error)
+        apply(reporter(), :record_error, [transaction, {kind, reason}])
       end
 
       defoverridable handle_errors: 2
     end
+  end
+
+  def reporter do
+    Application.get_env(:new_relixir, :reporter, NewRelixir.Transaction)
   end
 end

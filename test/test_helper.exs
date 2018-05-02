@@ -13,6 +13,11 @@ defmodule TestHelpers.Assertions do
     assert is_map(value) && value.__struct__ == module, "expected #{module}, got #{inspect(value)}"
   end
 
+  def get_errors do
+    [_, _, _, errors] = NewRelixir.Collector.pull
+    errors
+  end
+
   def get_metric_keys(), do: Map.keys(get_metrics())
 
   def get_metric_by_key(key), do: get_metrics()[key]
