@@ -104,39 +104,40 @@ Phoenix application named `MyApp`.
     `MyApp.Repo.my_custom_operation/2` will be recorded to New Relic.
 
 ## Error Reporting
-   If you want to report all errors to new relic
+If you want to report all errors to new relic
 
-1.  Configure your router
-    ```elixir
-    # lib/my_app/router.ex
+Configure your router
 
-    defmodule MyApp.Router do
-      use MyApp, :router
-      use NewRelixir.Plug.Exception
+```elixir
+# lib/my_app/router.ex
 
-      ...
-    end
-    ```
+defmodule MyApp.Router do
+  use MyApp, :router
+  use NewRelixir.Plug.Exception
 
-    If you want to report caught errors
+  ...
+end
+```
 
-    ```elixir
-    try do
-      raise "oops"
-    catch
-      kind, reason ->
-        transaction =
-          case NewRelixir.CurrentTransaction.get() do
-            {:ok, transaction} -> transaction
-            {:error, _} -> NewRelixir.CurrentTransaction.set(conn.request_path)
-          end
+If you want to report caught errors
 
-        NewRelixir.Transaction.record_error(transaction, {kind, reason})
+```elixir
+try do
+  raise "oops"
+catch
+  kind, reason ->
+    transaction =
+      case NewRelixir.CurrentTransaction.get() do
+        {:ok, transaction} -> transaction
+        {:error, _} -> NewRelixir.CurrentTransaction.set(conn.request_path)
+      end
 
-        # You may want to re-raise this exception
-        :erlang.raise(kind, reason, System.stacktrace)
-    end
-    ```
+    NewRelixir.Transaction.record_error(transaction, {kind, reason})
+
+    # You may want to re-raise this exception
+    :erlang.raise(kind, reason, System.stacktrace)
+end
+```
 
 ## Upgrading from 0.3.x
 
