@@ -1,4 +1,8 @@
 # Version 0.4.2
+* Add stack trace to error reporting and add plug error handler [#46](https://github.com/TheRealReal/new-relixir/pull/46)
+* Update hackney dependency [#47](https://github.com/TheRealReal/new-relixir/pull/46)
+
+# Version 0.4.2
 * Fix polling and language setting config keys  [#43](https://github.com/TheRealReal/new-relixir/pull/43)
 * Fix test race condition  [#42](https://github.com/TheRealReal/new-relixir/pull/42)
 * Fix Dialyzer types  [#41](https://github.com/TheRealReal/new-relixir/pull/41)

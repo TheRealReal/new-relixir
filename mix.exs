@@ -5,7 +5,7 @@ defmodule NewRelixir.Mixfile do
     [
       app: :new_relixir,
       name: "New Relixir",
-      version: "0.4.2",
+      version: "0.4.3",
       elixir: "~> 1.5",
       description: "New Relic tracking for Phoenix and Plug applications.",
       package: package(),
@@ -28,7 +28,7 @@ defmodule NewRelixir.Mixfile do
     [
       {:ecto, "~> 2.0", runtime: false},
       {:ex_doc, "~> 0.16", only: :dev},
-      {:hackney, "~> 1.10"},
+      {:hackney, "~> 1.12"},
       {:phoenix, "~> 1.3", runtime: false}
     ]
   end
