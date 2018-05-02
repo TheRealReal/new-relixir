@@ -103,6 +103,42 @@ Phoenix application named `MyApp`.
     When using the wrapper module's `my_custom_operation`, the time it takes to call
     `MyApp.Repo.my_custom_operation/2` will be recorded to New Relic.
 
+## Error Reporting
+If you want to report all errors to new relic
+
+Configure your router
+
+```elixir
+# lib/my_app/router.ex
+
+defmodule MyApp.Router do
+  use MyApp, :router
+  use NewRelixir.Plug.Exception
+
+  ...
+end
+```
+
+If you want to report caught errors
+
+```elixir
+try do
+  raise "oops"
+catch
+  kind, reason ->
+    transaction =
+      case NewRelixir.CurrentTransaction.get() do
+        {:ok, transaction} -> transaction
+        {:error, _} -> NewRelixir.CurrentTransaction.set(conn.request_path)
+      end
+
+    NewRelixir.Transaction.record_error(transaction, {kind, reason})
+
+    # You may want to re-raise this exception
+    :erlang.raise(kind, reason, System.stacktrace)
+end
+```
+
 ## Upgrading from 0.3.x
 
 1.  Remove `NewRelixir.Plug.Phoenix` from your Plug pipeline and all further references to

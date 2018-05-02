@@ -9,6 +9,13 @@ defmodule NewRelixir.TransactionTest do
     :ok
   end
 
+  describe "record_error/2" do
+    test "adds error to the collector" do
+      Transaction.record_error("a-web-transaction", {:error, "Something went wrong"})
+      assert %{{"a-web-transaction", :error, "Something went wrong"} => 1} == get_errors()
+    end
+  end
+
   describe "record_web/2" do
     test "adds web transactions to the collector" do
       Transaction.record_web("a-web-transaction", 1_234)

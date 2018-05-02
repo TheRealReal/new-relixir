@@ -6,6 +6,15 @@ defmodule NewRelixir.Transaction do
   alias NewRelixir.Collector
 
   @doc """
+  Send an error to New Relic
+  """
+  @spec record_error(transaction :: binary, error :: {binary, binary | Exception.t}) :: :ok
+  def record_error(transaction, {type, message})
+    when is_binary(transaction) do
+    Collector.record_error(transaction, {type, message})
+  end
+
+  @doc """
   Records the total time of a web transaction.
   """
   @spec record_web(transaction :: binary, elapsed_time :: integer) :: :ok

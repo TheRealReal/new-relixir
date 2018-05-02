@@ -20,11 +20,11 @@ defmodule NewRelixir.Stats do
       scope2bin(scope),
       to_string(message),
       to_string(type),
-      [%{
+      %{
         parameter_groups: %{},
         stack_trace: [],
         request_params: %{},
-        request_uri: scope}]
+        request_uri: scope}
     ]
     List.duplicate(error, count)
   end
