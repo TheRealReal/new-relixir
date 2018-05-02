@@ -1,6 +1,6 @@
-# Version 0.4.2
+# Version 0.4.3
 * Add stack trace to error reporting and add plug error handler [#46](https://github.com/TheRealReal/new-relixir/pull/46)
-* Update hackney dependency [#47](https://github.com/TheRealReal/new-relixir/pull/46)
+* Update hackney dependency [commit](https://github.com/TheRealReal/new-relixir/commit/0c5ca9469f1c9a4d0c1b2d44b75c4d439c28cedf)
 
 # Version 0.4.2
 * Fix polling and language setting config keys  [#43](https://github.com/TheRealReal/new-relixir/pull/43)
