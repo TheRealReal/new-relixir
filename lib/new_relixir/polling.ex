@@ -28,7 +28,14 @@ defmodule NewRelixir.Polling do
   def handle_info(:pull, %{pull_fun: pull_fun, error_cb: error_cb, timer: old_timer}) do
     :erlang.cancel_timer(old_timer)
     timer = :erlang.send_after(@polling_interval, self(), :pull)
-    {:ok, hostname} = :inet.gethostname()
+    # when running in heroku, hostname will be set in env var DYNO
+    hostname = if env_hostname = System.get_env("DYNO") do
+      env_hostname
+    else
+      {:ok, hostname} = :inet.gethostname()
+      hostname
+    end
+
     try do
       case pull_fun.() do
         {[], [], _internval} ->
