@@ -13,7 +13,7 @@ and database queries.
 The following instructions show how to add instrumentation with New Relixir to a hypothetical
 Phoenix application named `MyApp`.
 
-1.  Add `new_relixir` to your list of dependencies and start-up applications in `mix.exs`:
+1.  Add `new_relixir` to your list of dependencies in `mix.exs`:
 
     ```elixir
     # mix.exs
@@ -23,16 +23,23 @@ Phoenix application named `MyApp`.
 
       # ...
 
-      def application do
-        [mod: {MyApp, []},
-         applications: [:new_relixir]]
-      end
-
       defp deps do
         [{:new_relixir, "~> 0.4"}]
       end
     end
     ```
+
+    If you use the `applications` key (only for apps created before Elixir 1.4) in
+    `def application do`, then you will also need to add `new_relixir` to it:
+
+    ```elixir
+    def application do
+      [mod: {MyApp, []},
+       applications: [:new_relixir]]
+    end
+    ```
+
+    If your app does not have an `applications` key, skip this instruction.
 
 2.  Add your New Relic application name and license key to `config/config.exs`. You may wish to use
     environment variables to keep production, staging, and development environments separate:
