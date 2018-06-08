@@ -138,7 +138,6 @@ defmodule NewRelixir.Agent do
     Enum.join(segments)
   end
 
-  defp urljoin(list) when is_list(list) and length(list) == 0, do: []
   defp urljoin([h | t]) do
     [url_var(h) | (for x <- t, do: ["&", url_var(x)])]
   end
