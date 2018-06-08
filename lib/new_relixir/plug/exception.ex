@@ -21,7 +21,6 @@ defmodule NewRelixir.Plug.Exception do
           case NewRelixir.CurrentTransaction.get() do
             {:ok, transaction} -> transaction
             {:error, _} -> NewRelixir.CurrentTransaction.set(conn.request_path)
-            _ -> nil
           end
 
         apply(reporter(), :record_error, [transaction, {kind, reason}])

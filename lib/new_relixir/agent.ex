@@ -31,9 +31,9 @@ defmodule NewRelixir.Agent do
 
         struct["return_value"]
       {:ok, 503, _} ->
-        raise RuntimeError.message("newrelic_down")
+        raise "newrelic_down"
       {:error, :timeout} ->
-        raise RuntimeError.message("newrelic_down")
+        raise "newrelic_down"
     end
   end
 
@@ -117,7 +117,7 @@ defmodule NewRelixir.Agent do
   end
 
   def request(url, body \\ "[]") do
-    headers = [{'Content-Encoding', 'identity'}]
+    headers = [{"Content-Encoding", "identity"}]
     case :hackney.post(url, headers, body, [:with_body]) do
       {:ok, status, _, body} -> {:ok, status, body}
       error -> error
@@ -138,7 +138,7 @@ defmodule NewRelixir.Agent do
     Enum.join(segments)
   end
 
-  defp urljoin([]), do: []
+  defp urljoin(list) when is_list(list) and length(list) == 0, do: []
   defp urljoin([h | t]) do
     [url_var(h) | (for x <- t, do: ["&", url_var(x)])]
   end

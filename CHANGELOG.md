@@ -1,3 +1,6 @@
+# Version 0.4.5
+* Fixes dialyzer errors [#48](https://github.com/TheRealReal/new-relixir/pull/48)
+
 # Version 0.4.4
 * Use dyno name as hostname for heroku users [#47](https://github.com/TheRealReal/new-relixir/pull/47)
 
