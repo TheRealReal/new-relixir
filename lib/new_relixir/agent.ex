@@ -2,6 +2,7 @@ defmodule NewRelixir.Agent do
   require Logger
 
   @base_url "http://~s/agent_listener/invoke_raw_method?"
+  @base_args [protocol_version: 10, marshal_format: :json]
 
   @doc """
   Connects to New Relic and sends the hopefully correctly
@@ -128,11 +129,7 @@ defmodule NewRelixir.Agent do
     url("collector.newrelic.com", args)
   end
   def url(host, args) do
-    base_args = [
-      protocol_version: 10,
-      license_key: license_key(),
-      marshal_format: :json
-    ]
+    base_args = Keyword.merge(@base_args, license_key: license_key())
     base_url = String.replace(@base_url, "~s", host)
     segments = List.flatten([base_url, urljoin(args ++ base_args)])
     Enum.join(segments)
