@@ -54,6 +54,12 @@ defmodule NewRelixir.Plug.InstrumentationTest do
     assert_contains(get_metric_keys(), {@transaction_name, {:db, "SQL"}})
   end
 
+  test "instrument_db records query as SQL when query has no model", %{conn: conn} do
+    query = Ecto.Query.from("fake_table", select: [:id])
+    Instrumentation.instrument_db(:foo, query, [conn: conn], fn -> nil end)
+    assert_contains(get_metric_keys(), {@transaction_name, {:db, "SQL"}})
+  end
+
   # with transaction
 
   test "instrument_db records accurate elapsed time", %{conn: conn} do

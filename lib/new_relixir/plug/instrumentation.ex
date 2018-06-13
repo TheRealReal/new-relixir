@@ -52,7 +52,8 @@ defmodule NewRelixir.Plug.Instrumentation do
   defp infer_model(%{data: data}) do #ecto 2.0
     infer_model(data)
   end
-  defp infer_model(%Ecto.Query{from: {_, model_type}}) do
+
+  defp infer_model(%Ecto.Query{from: {_, model_type}}) when not is_nil(model_type) do
     short_module_name(model_type)
   end
   defp infer_model(%Ecto.Query{}) do
