@@ -1,6 +1,14 @@
 defmodule TestHelpers.Assertions do
   import ExUnit.Assertions
 
+  def assert_defined_function(module, function_name, arity) do
+    module.__info__(:functions)
+    |> Enum.filter(fn {func_name, func_arity} ->
+      func_name == function_name && func_arity == arity
+    end)
+    |> Enum.any?()
+  end
+
   def assert_contains(collection, value) do
     assert Enum.member?(collection, value), "expected #{inspect(collection)} to contain #{inspect(value)}"
   end
