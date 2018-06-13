@@ -3,7 +3,7 @@ defmodule NewRelixir.Collector do
   @name __MODULE__
   @default_state [%{}, %{}]
 
-  def start_link(_opts) do
+  def start_link(_opts \\ []) do
     GenServer.start_link(@name, [current_time() | @default_state], name: @name)
   end
 

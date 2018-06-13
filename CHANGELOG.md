@@ -1,3 +1,6 @@
+# Version 0.4.6
+* Fixes undefined function [`NewRelixir.Collector.start_link/0`](https://github.com/TheRealReal/new-relixir/issues/54)
+
 # Version 0.4.5
 * Fixes dialyzer errors [#53](https://github.com/TheRealReal/new-relixir/pull/53)
 * Adjust instruction for Elixir version >= 1.4 [#52](https://github.com/TheRealReal/new-relixir/pull/53)
