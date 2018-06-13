@@ -1,5 +1,7 @@
 # Version 0.4.5
 * Fixes dialyzer errors [#53](https://github.com/TheRealReal/new-relixir/pull/53)
+* Adjust instruction for Elixir version >= 1.4 [#52](https://github.com/TheRealReal/new-relixir/pull/53)
+* Resolve default init warning #48 [#48](https://github.com/TheRealReal/new-relixir/issues/48)
 
 # Version 0.4.4
 * Use dyno name as hostname for heroku users [#47](https://github.com/TheRealReal/new-relixir/pull/47)
