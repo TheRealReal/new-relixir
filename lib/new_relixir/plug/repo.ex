@@ -86,11 +86,11 @@ defmodule NewRelixir.Plug.Repo do
       end
 
 
-      @spec insert_all(schema_or_source :: binary | {binary, Ecto.Schema.t} | Ecto.Schema.t,
+      @spec insert_all(module_or_map :: binary | {binary, module} | module,
         entries :: [map | Keyword.t], opts :: Keyword.t) :: {integer, nil | [term]} | no_return
-      def insert_all(schema_or_source, entries, opts \\ []) do
-        instrument_db(:insert_all, schema_or_source, opts, fn() ->
-          repo().insert_all(schema_or_source, entries, opts)
+      def insert_all(module_or_map, entries, opts \\ []) do
+        instrument_db(:insert_all, module_or_map, opts, fn() ->
+          repo().insert_all(module_or_map, entries, opts)
         end)
       end
 
