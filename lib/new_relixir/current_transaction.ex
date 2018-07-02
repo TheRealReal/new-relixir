@@ -33,6 +33,7 @@ defmodule NewRelixir.CurrentTransaction do
     Process.put(@key, transaction)
     transaction
   end
+
   def set(_), do: nil
 
   # Getting the other processes info generate locks. That's why this
@@ -45,10 +46,16 @@ defmodule NewRelixir.CurrentTransaction do
     |> set
   end
 
-  defp extract_transaction(pid) do
-    case Process.info(pid, :dictionary) do
+  defp extract_transaction(ancestor) do
+    ancestor
+    |> locate_process()
+    |> Process.info(:dictionary)
+    |> case do
       {:dictionary, info} -> info[@key]
       _ -> nil
     end
   end
+
+  defp locate_process(pid) when is_pid(pid), do: pid
+  defp locate_process(atom) when is_atom(atom), do: Process.whereis(atom)
 end
