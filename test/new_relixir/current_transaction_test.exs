@@ -13,14 +13,25 @@ defmodule NewRelixir.CurrentTransactionTest do
     test "gets transaction from grandparent process and sets on current when missing" do
       Process.put(:new_relixir_transaction, "ancestor-transaction")
 
-      parent = Task.async fn ->
-        child = Task.async(&CurrentTransaction.get/0)
-        Task.await(child)
-      end
+      parent =
+        Task.async(fn ->
+          child = Task.async(&CurrentTransaction.get/0)
+          Task.await(child)
+        end)
 
       {:ok, transaction} = Task.await(parent)
 
       assert "ancestor-transaction" == transaction
+    end
+
+    test "gets transaction from named parent process" do
+      Process.register(self(), :named_ancestor)
+      Process.put(:new_relixir_transaction, "named-ancestor-transaction")
+
+      child = Task.async(&CurrentTransaction.get/0)
+      {:ok, transaction} = Task.await(child)
+
+      assert "named-ancestor-transaction" == transaction
     end
 
     test "returns error when missing from the current process dictionary and from ancestors" do
