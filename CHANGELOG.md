@@ -1,3 +1,6 @@
+# Version 0.4.7
+* Support registered processes as ancestors [#58](https://github.com/TheRealReal/new-relixir/pull/58)
+
 # Version 0.4.6
 * Fixes undefined function [`NewRelixir.Collector.start_link/0`](https://github.com/TheRealReal/new-relixir/issues/54)
 

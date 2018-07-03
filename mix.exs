@@ -5,7 +5,7 @@ defmodule NewRelixir.Mixfile do
     [
       app: :new_relixir,
       name: "New Relixir",
-      version: "0.4.6",
+      version: "0.4.7",
       elixir: "~> 1.5",
       description: "New Relic tracking for Phoenix and Plug applications.",
       package: package(),
