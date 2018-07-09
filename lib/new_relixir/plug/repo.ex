@@ -26,9 +26,12 @@ defmodule NewRelixir.Plug.Repo do
 
       import NewRelixir.Plug.Instrumentation
 
-      @spec transaction(fun, Keyword.t) :: {:ok, any} | {:error, any}
-      def transaction(fun, opts \\ []) when is_list(opts) do
-        repo().transaction(fun, opts)
+      @spec transaction(fun_or_multi :: fun | Ecto.Multi.t(), opts :: Keyword.t()) ::
+              {:ok, any}
+              | {:error, any}
+              | {:error, Ecto.Multi.name(), any, %{Ecto.Multi.name() => any}}
+      def transaction(fun_or_multi, opts \\ []) when is_list(opts) do
+        repo().transaction(fun_or_multi, opts)
       end
 
       @spec rollback(any) :: no_return
