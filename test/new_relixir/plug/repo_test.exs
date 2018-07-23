@@ -103,6 +103,14 @@ defmodule NewRelixir.Plug.RepoTest do
       record_call(:preload, [model_or_models, preloads, opts])
     end
 
+    def query(sql, params \\ [], opts \\ []) do
+      record_call(:query, [sql, params, opts])
+    end
+
+    def query!(sql, params \\ [], opts \\ []) do
+      record_call(:query!, [sql, params, opts])
+    end
+
     def __adapter__ do
     end
 
@@ -465,6 +473,38 @@ defmodule NewRelixir.Plug.RepoTest do
       [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.preload"}})
       assert_between(recorded_time, sleep_time, elapsed_time)
     end
+  end
+
+  # query
+
+  test "query calls repo's query method" do
+    assert Repo.query("my_query", ["param"]) == FakeRepo.query("my_query", ["param"])
+  end
+
+  test "records time to call repo's query method" do
+    {elapsed_time, sleep_time} = :timer.tc(fn ->
+      {time, _, _} = Repo.query("my_query", ["param"])
+      time
+    end)
+
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "my_query"}})
+    assert_between(recorded_time, sleep_time, elapsed_time)
+  end
+
+  # query!
+
+  test "query! calls repo's query method" do
+    assert Repo.query!("my_query", ["param"]) == FakeRepo.query!("my_query", ["param"])
+  end
+
+  test "records time to call repo's query! method" do
+    {elapsed_time, sleep_time} = :timer.tc(fn ->
+      {time, _, _} = Repo.query!("my_query", ["param"])
+      time
+    end)
+
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "my_query"}})
+    assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
   # transaction

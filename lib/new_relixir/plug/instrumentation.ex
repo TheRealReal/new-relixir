@@ -18,6 +18,17 @@ defmodule NewRelixir.Plug.Instrumentation do
   By default, the query name will be inferred from `queryable` and `action`. This
   can be overriden by providing a `:query` option in `opts`.
   """
+  @spec instrument_db(atom, String.t(), [term()], Keyword.t(), fun) :: any
+  def instrument_db(action, sql, params, opts, f) do
+    {elapsed, result} = :timer.tc(f)
+
+    opts
+    |> Keyword.put(:query, sql)
+    |> record(elapsed)
+
+    result
+  end
+
   @spec instrument_db(atom, Ecto.Queryable.t, Keyword.t, fun) :: any
   def instrument_db(action, queryable, opts, f) do
     {elapsed, result} = :timer.tc(f)
