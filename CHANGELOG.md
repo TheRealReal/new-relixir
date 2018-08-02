@@ -1,3 +1,8 @@
+# Version 0.4.8
+* Fix @SPEC for Repo.insert_all/3 (#56)(https://github.com/TheRealReal/new-relixir/pull/58)
+* Update repo transaction spec to match the callback from Ecto (#60)(https://github.com/TheRealReal/new-relixir/pull/60)
+* Allowing instrumentation of Ecto.Adapters.SQL.query (#63)(https://github.com/TheRealReal/new-relixir/pull/63)
+
 # Version 0.4.7
 * Support registered processes as ancestors [#58](https://github.com/TheRealReal/new-relixir/pull/58)
 
