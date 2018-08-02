@@ -36,7 +36,7 @@ defmodule NewRelixir.Transaction do
   end
 
   @doc """
-  Records an external HTTP call made in a web transaction.
+  Records an external HTTP call made in a transaction.
   """
   @spec record_external(transaction :: binary, host :: binary, elapsed_time :: integer) :: :ok
   def record_external(transaction, host, elapsed_time)
@@ -44,5 +44,15 @@ defmodule NewRelixir.Transaction do
       and is_binary(host)
       and is_integer(elapsed_time) do
     Collector.record_value({transaction, {:ext, host}}, elapsed_time)
+  end
+
+  def record_external({:background, transaction}, host, elapsed_time)
+    when is_binary(host) 
+    and is_integer(elapsed_time) do
+    Collector.record_value({{:background, transaction}, {:external, host}}, elapsed_time)
+  end
+
+  def record_background(transaction, elapsed_time) do
+    Collector.record_value({{:background, transaction}, :total}, elapsed_time)
   end
 end
