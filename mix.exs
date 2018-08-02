@@ -10,8 +10,8 @@ defmodule NewRelixir.Mixfile do
       description: "New Relic tracking for Phoenix and Plug applications.",
       package: package(),
       source_url: "https://github.com/TheRealReal/new-relixir",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
     ]
@@ -43,6 +43,6 @@ defmodule NewRelixir.Mixfile do
   end
 
   defp aliases do
-    ["test": ["test --no-start"]]
+    [test: ["test --no-start"]]
   end
 end
