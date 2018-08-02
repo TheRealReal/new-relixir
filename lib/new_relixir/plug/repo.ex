@@ -164,6 +164,33 @@ defmodule NewRelixir.Plug.Repo do
         end)
       end
 
+      @spec query(String.t(), [term()], Keyword.t()) ::
+        {:ok,
+         %{
+           :rows => nil | [[term()] | binary()],
+           :num_rows => non_neg_integer(),
+           optional(atom()) => any()
+         }}
+        | {:error, Exception.t()}
+      def query(sql, params \\ [], opts \\ []) do
+        instrument_db(:query, sql, params, opts, fn() ->
+          repo().query(sql, params, opts)
+        end)
+      end
+
+      @spec query!(String.t(), [term()], Keyword.t()) ::
+        %{
+          :rows => nil | [[term()] | binary()],
+          :num_rows => non_neg_integer(),
+          optional(atom()) => any()
+        }
+        | no_return()
+      def query!(sql, params \\ [], opts \\ []) do
+        instrument_db(:query!, sql, params, opts, fn() ->
+          repo().query!(sql, params, opts)
+        end)
+      end
+
       @spec aggregate(Ecto.Queryable.t, :avg | :count | :max | :min | :sum, atom, Keyword.t) :: term | nil
       def aggregate(queryable, aggregate, field, opts \\ []) do
         instrument_db(:aggregate, queryable, opts, fn() ->
