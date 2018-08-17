@@ -26,7 +26,7 @@ defmodule NewRelixir.Instrumenters.Plug do
 
   @behaviour Plug
 
-  alias NewRelixir.{CurrentTransaction, Transaction}
+  alias NewRelixir.{CurrentTransaction, Transaction, Utils}
   alias Plug.Conn
 
   def init(opts), do: opts
@@ -39,8 +39,8 @@ defmodule NewRelixir.Instrumenters.Plug do
     end
   end
 
-  defp record_transaction(%Conn{request_path: "/" <> path, method: method} = conn) do
-    transaction = "#{path}##{method}"
+  defp record_transaction(conn) do
+    transaction = Utils.transaction_name(conn)
     CurrentTransaction.set(transaction)
 
     start = System.monotonic_time()

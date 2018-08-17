@@ -34,21 +34,21 @@ defmodule ExceptionTest do
   end
 
   test "Raising an error on failure" do
-    conn = conn(:get, "/")
+    conn = conn(:get, "/path")
 
     assert_raise Plug.Conn.WrapperError, fn ->
       TestPlug.call(conn, [])
     end
 
-    assert_received {:record_error, {"/", {:error, %TestException{}}}}
+    assert_received {:record_error, {"path#GET", {:error, %TestException{}}}}
   end
 
-  test "Includes path data in report" do
+  test "Includes request data in report" do
     conn = conn(:get, "/some_path")
 
     catch_error TestPlug.call(conn, [])
-    assert_received {:record_error, {path, {:error, %TestException{}}}}
+    assert_received {:record_error, {transaction, {:error, %TestException{}}}}
 
-    assert path == "/some_path"
+    assert transaction == "some_path#GET"
   end
 end
