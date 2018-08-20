@@ -69,6 +69,12 @@ defmodule NewRelixir.Plug.Instrumentation do
     Keyword.put_new(opts, :action, action)
   end
 
+  defp infer_model(nil) do
+    nil
+  end
+  defp infer_model([]) do
+    []
+  end
   defp infer_model(%{__struct__: model_type, __meta__: %Ecto.Schema.Metadata{}}) do
     short_module_name(model_type)
   end
