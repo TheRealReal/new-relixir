@@ -43,6 +43,6 @@ defmodule NewRelixir.Mixfile do
   end
 
   defp aliases do
-    ["test": ["test --no-start"]]
+    [test: ["test --no-start"]]
   end
 end
