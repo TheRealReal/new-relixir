@@ -457,7 +457,8 @@ defmodule NewRelixir.Plug.RepoTest do
 
   describe "preload/3" do
     test "calls repo's preload method" do
-      assert Repo.preload(%FakeModel{}, [:foo, :bar]) == FakeRepo.preload(%FakeModel{}, [:foo, :bar])
+      assert Repo.preload(%FakeModel{}, [:foo, :bar], force: true) ==
+               FakeRepo.preload(%FakeModel{}, [:foo, :bar], force: true)
     end
 
     test "works with list of structs"  do
