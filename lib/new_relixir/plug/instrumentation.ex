@@ -20,7 +20,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   can be overriden by providing a `:query` option in `opts`.
   """
   @spec instrument_db(atom, String.t(), [term()], Keyword.t(), fun) :: any
-  def instrument_db(action, sql, params, opts, f) do
+  def instrument_db(_action, sql, _params, opts, f) do
     {elapsed, result} = :timer.tc(f)
 
     opts

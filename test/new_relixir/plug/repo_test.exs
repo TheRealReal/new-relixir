@@ -27,6 +27,10 @@ defmodule NewRelixir.Plug.RepoTest do
       record_call(:all, [queryable, opts])
     end
 
+    def stream(queryable, opts \\ []) do
+      record_call(:stream, [queryable, opts])
+    end
+
     def get(queryable, id, opts \\ []) do
       record_call(:get, [queryable, id, opts])
     end
@@ -41,6 +45,10 @@ defmodule NewRelixir.Plug.RepoTest do
 
     def get_by!(queryable, clauses, opts \\ []) do
       record_call(:get_by!, [queryable, clauses, opts])
+    end
+
+    def load(schema_or_type, data) do
+      record_call(:load, [schema_or_type, data])
     end
 
     def one(queryable, opts \\ []) do
