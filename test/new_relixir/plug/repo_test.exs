@@ -155,12 +155,13 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's all method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.all(FakeModel)
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.all(FakeModel)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -172,12 +173,13 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's get method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get(FakeModel, :rand.uniform(1000))
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.get(FakeModel, :rand.uniform(1000))
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -189,44 +191,47 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's get! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get!(FakeModel, :rand.uniform(1000))
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.get!(FakeModel, :rand.uniform(1000))
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
   # get_by
 
   test "get_by calls repo's get_by method" do
-    assert Repo.get_by(FakeModel, [name: "Bob"]) == FakeRepo.get_by(FakeModel, name: "Bob")
+    assert Repo.get_by(FakeModel, name: "Bob") == FakeRepo.get_by(FakeModel, name: "Bob")
   end
 
   test "records time to call repo's get_by method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get_by(FakeModel, [name: "Bob"])
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.get_by(FakeModel, name: "Bob")
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get_by"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
   # get_by!
 
   test "get_by! calls repo's get_by! method" do
-    assert Repo.get_by!(FakeModel, [name: "Bob"]) == FakeRepo.get_by!(FakeModel, name: "Bob")
+    assert Repo.get_by!(FakeModel, name: "Bob") == FakeRepo.get_by!(FakeModel, name: "Bob")
   end
 
   test "records time to call repo's get_by! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.get_by!(FakeModel, [name: "Bob"])
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.get_by!(FakeModel, name: "Bob")
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.get_by!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -237,12 +242,13 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's one method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.one(FakeModel)
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.one(FakeModel)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.one"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -253,45 +259,48 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's one! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.one!(FakeModel)
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.one!(FakeModel)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.one!"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
   describe "insert_all/3" do
     test "insert_all calls repo's insert_all method" do
-      assert Repo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]]) == FakeRepo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]])
+      assert Repo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]]) ==
+               FakeRepo.insert_all(FakeModel, [[name: "Bob"], [name: "Jake"]])
     end
 
     test "records time to call repo's insert_all method" do
-      {elapsed_time, sleep_time} = :timer.tc(fn ->
-        {time, _, _} = Repo.insert_all(FakeModel, [%{name: "Bob"}, %{name: "Jake"}])
-        time
-      end)
+      {elapsed_time, sleep_time} =
+        :timer.tc(fn ->
+          {time, _, _} = Repo.insert_all(FakeModel, [%{name: "Bob"}, %{name: "Jake"}])
+          time
+        end)
 
-      [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_all"}})
+      [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
       assert_between(recorded_time, sleep_time, elapsed_time)
     end
   end
 
-
   # update_all
 
   test "update_all calls repo's update_all method" do
-    assert Repo.update_all(FakeModel, [name: "Bob"]) == FakeRepo.update_all(FakeModel, name: "Bob")
+    assert Repo.update_all(FakeModel, name: "Bob") == FakeRepo.update_all(FakeModel, name: "Bob")
   end
 
   test "records time to call repo's update_all method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.update_all(FakeModel, %{name: "Bob"})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.update_all(FakeModel, %{name: "Bob"})
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update_all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -302,12 +311,13 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's delete_all method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.delete_all(FakeModel)
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.delete_all(FakeModel)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete_all"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -318,10 +328,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's insert method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.insert(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.insert(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -334,10 +345,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's update method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.update(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.update(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -350,12 +362,15 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's insert_or_update method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.insert_or_update(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.insert_or_update(%FakeModel{})
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update"}})
+    [recorded_time | _] =
+      get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update"}})
+
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -366,10 +381,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's delete method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.delete(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.delete(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -382,10 +398,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's insert! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.insert!(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.insert!(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -398,10 +415,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's update! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.update!(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.update!(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.update!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -414,12 +432,15 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's insert_or_update! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.insert_or_update!(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.insert_or_update!(%FakeModel{})
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update!"}})
+    [recorded_time | _] =
+      get_metric_by_key({@transaction_name, {:db, "FakeModel.insert_or_update!"}})
+
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -430,10 +451,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's delete! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.delete!(%FakeModel{})
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.delete!(%FakeModel{})
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.delete!"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -446,12 +468,13 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's aggregate method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.aggregate(FakeModel, :count, :id)
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.aggregate(FakeModel, :count, :id)
+        time
+      end)
 
-    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.aggregate"}})
+    [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "SQL"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
   end
 
@@ -461,15 +484,17 @@ defmodule NewRelixir.Plug.RepoTest do
                FakeRepo.preload(%FakeModel{}, [:foo, :bar], force: true)
     end
 
-    test "works with list of structs"  do
-      assert Repo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar]) == FakeRepo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar])
+    test "works with list of structs" do
+      assert Repo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar]) ==
+               FakeRepo.preload([%FakeModel{}, %FakeModel{}], [:foo, :bar])
     end
 
     test "records time to call repo's preload method" do
-      {elapsed_time, sleep_time} = :timer.tc(fn ->
-        {time, _, _} = Repo.preload(%FakeModel{}, [:foo, :bar])
-        time
-      end)
+      {elapsed_time, sleep_time} =
+        :timer.tc(fn ->
+          {time, _, _} = Repo.preload(%FakeModel{}, [:foo, :bar])
+          time
+        end)
 
       [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "FakeModel.preload"}})
       assert_between(recorded_time, sleep_time, elapsed_time)
@@ -483,10 +508,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's query method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.query("my_query", ["param"])
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.query("my_query", ["param"])
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "my_query"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
@@ -499,10 +525,11 @@ defmodule NewRelixir.Plug.RepoTest do
   end
 
   test "records time to call repo's query! method" do
-    {elapsed_time, sleep_time} = :timer.tc(fn ->
-      {time, _, _} = Repo.query!("my_query", ["param"])
-      time
-    end)
+    {elapsed_time, sleep_time} =
+      :timer.tc(fn ->
+        {time, _, _} = Repo.query!("my_query", ["param"])
+        time
+      end)
 
     [recorded_time | _] = get_metric_by_key({@transaction_name, {:db, "my_query"}})
     assert_between(recorded_time, sleep_time, elapsed_time)
