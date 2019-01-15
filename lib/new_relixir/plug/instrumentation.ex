@@ -20,7 +20,7 @@ defmodule NewRelixir.Plug.Instrumentation do
   can be overriden by providing a `:query` option in `opts`.
   """
   @spec instrument_db(atom, String.t(), [term()], Keyword.t(), fun) :: any
-  def instrument_db(action, sql, params, opts, f) do
+  def instrument_db(_action, sql, _params, opts, f) do
     {elapsed, result} = :timer.tc(f)
 
     opts
@@ -69,14 +69,18 @@ defmodule NewRelixir.Plug.Instrumentation do
     Keyword.put_new(opts, :action, action)
   end
 
+  defp infer_model(module) when is_atom(module) do
+    infer_model(Ecto.Queryable.to_query(module))
+  end
+
   defp infer_model(%{__struct__: model_type, __meta__: %Ecto.Schema.Metadata{}}) do
     short_module_name(model_type)
   end
-  defp infer_model(%{data: data}) do #ecto 2.0
+  defp infer_model(%{data: data}) do
     infer_model(data)
   end
 
-  defp infer_model(%Ecto.Query{from: {_, model_type}}) when not is_nil(model_type) do
+  defp infer_model(%Ecto.Query{from: %{source: {_, model_type}}}) when not is_nil(model_type) do
     short_module_name(model_type)
   end
   defp infer_model(%Ecto.Query{}) do

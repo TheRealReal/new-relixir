@@ -15,6 +15,12 @@ defmodule NewRelixir.Plug.RepoTest do
     def stop(_pid, _timeout \\ 5000) do
     end
 
+    def load(_, _) do
+    end
+
+    def checkout(_, _) do
+    end
+
     def transaction(fun, opts \\ []) when is_list(opts) do
       record_call(:transaction, [fun, opts])
     end
