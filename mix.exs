@@ -26,7 +26,7 @@ defmodule NewRelixir.Mixfile do
 
   defp deps do
     [
-      {:ecto, "~> 2.0", runtime: false},
+      {:ecto, "~> 3.0", runtime: false},
       {:ex_doc, "~> 0.19", only: :dev},
       {:hackney, "~> 1.12"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
