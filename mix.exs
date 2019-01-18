@@ -5,7 +5,7 @@ defmodule NewRelixir.Mixfile do
     [
       app: :new_relixir,
       name: "New Relixir",
-      version: "0.4.8",
+      version: "0.5.0",
       elixir: "~> 1.5",
       description: "New Relic tracking for Phoenix and Plug applications.",
       package: package(),
@@ -36,7 +36,7 @@ defmodule NewRelixir.Mixfile do
 
   defp package do
     [
-      maintainers: ["Fredrik Björk", "Robert Zotter", "Coburn Berry"],
+      maintainers: ["Fredrik Björk", "Robert Zotter"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/TheRealReal/new-relixir"}
     ]

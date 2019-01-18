@@ -1,7 +1,12 @@
+# Version 0.5.0
+* Add support for Ecto 3 and drop support for Ecto 2 [#80](https://github.com/TheRealReal/new-relixir/pull/80)
+* Consistent transaction naming for errors [#70](https://github.com/TheRealReal/new-relixir/pull/70)
+* Fixed deprecation warning in test
+
 # Version 0.4.8
-* Fix @SPEC for Repo.insert_all/3 (#56)(https://github.com/TheRealReal/new-relixir/pull/58)
-* Update repo transaction spec to match the callback from Ecto (#60)(https://github.com/TheRealReal/new-relixir/pull/60)
-* Allowing instrumentation of Ecto.Adapters.SQL.query (#63)(https://github.com/TheRealReal/new-relixir/pull/63)
+* Fix @SPEC for Repo.insert_all/3 [#56](https://github.com/TheRealReal/new-relixir/pull/58)
+* Update repo transaction spec to match the callback from Ecto [#60](https://github.com/TheRealReal/new-relixir/pull/60)
+* Allowing instrumentation of Ecto.Adapters.SQL.query [#63](https://github.com/TheRealReal/new-relixir/pull/63)
 
 # Version 0.4.7
 * Support registered processes as ancestors [#58](https://github.com/TheRealReal/new-relixir/pull/58)
