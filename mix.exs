@@ -30,6 +30,7 @@ defmodule NewRelixir.Mixfile do
       {:ex_doc, "~> 0.19", only: :dev},
       {:hackney, "~> 1.12"},
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:jason, "~> 1.0"},
       {:phoenix, "~> 1.3", runtime: false}
     ]
   end
