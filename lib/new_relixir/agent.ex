@@ -28,7 +28,7 @@ defmodule NewRelixir.Agent do
     url = url(method: :get_redirect_host)
     case request(url) do
       {:ok, 200, body} ->
-        struct = Poison.decode!(body)
+        struct = Jason.decode!(body)
 
         struct["return_value"]
       {:ok, 503, _} ->
@@ -52,9 +52,9 @@ defmodule NewRelixir.Agent do
       :settings => %{}
     }]
 
-    case request(url, Poison.encode!(data)) do
+    case request(url, Jason.encode!(data)) do
       {:ok, 200, body} ->
-        struct = Poison.decode!(body)
+        struct = Jason.decode!(body)
         return = struct["return_value"]
 
 
@@ -83,10 +83,10 @@ defmodule NewRelixir.Agent do
   end
 
   def push_data(url, data) do
-    result = request(url, Poison.encode!(data))
+    result = request(url, Jason.encode!(data))
     case result do
       {:ok, 200, body} ->
-        struct = Poison.decode!(body)
+        struct = Jason.decode!(body)
         case struct["exception"] do
           nil ->
             :ok
