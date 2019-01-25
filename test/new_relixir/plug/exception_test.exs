@@ -11,7 +11,7 @@ defmodule ExceptionTest do
       quote do
         def call(conn, _opts) do
           raise Plug.Conn.WrapperError, conn: conn,
-          kind: :error, stack: System.stacktrace,
+          kind: :error, stack: [],
           reason: TestException.exception([])
         end
       end
