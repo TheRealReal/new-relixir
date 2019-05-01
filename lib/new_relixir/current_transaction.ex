@@ -34,6 +34,11 @@ defmodule NewRelixir.CurrentTransaction do
     transaction
   end
 
+  def set({:background, transaction}) when is_binary(transaction) do
+    Process.put(@key, {:background, transaction})
+    transaction
+  end
+
   def set(_), do: nil
 
   # Getting the other processes info generate locks. That's why this
