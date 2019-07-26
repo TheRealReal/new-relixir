@@ -42,7 +42,7 @@ defmodule NewRelixir.Agent do
     url = url(collector, [method: :connect])
 
     data = [%{
-      :agent_version => "1.5.0.103",
+      :agent_version => "2.42.0",
       :app_name => [app_name()],
       :host => l2b(hostname),
       :identifier => app_name(),
