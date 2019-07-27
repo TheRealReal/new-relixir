@@ -2,7 +2,8 @@ defmodule NewRelixir.Agent do
   require Logger
 
   @base_url "http://~s/agent_listener/invoke_raw_method?"
-  @base_args [protocol_version: 10, marshal_format: :json]
+  @base_args [protocol_version: 14, marshal_format: :json]
+  @agent_version "2.56.0.42"
 
   @doc """
   Connects to New Relic and sends the hopefully correctly
@@ -42,7 +43,7 @@ defmodule NewRelixir.Agent do
     url = url(collector, [method: :connect])
 
     data = [%{
-      :agent_version => "2.42.0",
+      :agent_version => @agent_version,
       :app_name => [app_name()],
       :host => l2b(hostname),
       :identifier => app_name(),
@@ -118,7 +119,11 @@ defmodule NewRelixir.Agent do
   end
 
   def request(url, body \\ "[]") do
-    headers = [{"Content-Encoding", "identity"}]
+    headers = [
+      {"Content-Encoding", "identity"},
+      {"User-Agent", "NewRelic-PythonAgent/#{@agent_version} (Python 2.7.10 linux2)"}
+    ]
+
     case :hackney.post(url, headers, body, [:with_body]) do
       {:ok, status, _, body} -> {:ok, status, body}
       error -> error
