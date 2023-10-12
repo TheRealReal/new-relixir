@@ -1,5 +1,15 @@
 # New Relixir [![Build Status](https://travis-ci.org/TheRealReal/new-relixir.svg?branch=master)](https://travis-ci.org/TheRealReal/new-relixir)
 
+This repository has been archived.
+
+📚 Archived Status:
+This repository is no longer actively maintained or updated. It is being preserved for historical reference or potential future use. Issues, pull requests, and contributions are no longer accepted.
+
+🙏 Thank You:
+We appreciate the contributions and engagement from the community during the active phase of this project.
+
+Thank you!
+
 Instrument your Phoenix and Plug applications with New Relic.
 
 New Relixir currently supports instrumenting bare-bones Plug endpoints, Phoenix
